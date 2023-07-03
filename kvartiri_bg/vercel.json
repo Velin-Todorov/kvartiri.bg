@@ -1,0 +1,13 @@
+{
+    "builds": [{
+        "src": "kvartiri_bg/wsgi.py",
+        "use": "@ardnt/vercel-python-wsgi",
+        "config": { "maxLambdaSize": "15mb" }
+    }],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "kvartiri_bg/wsgi.py"
+        }
+    ]
+}
