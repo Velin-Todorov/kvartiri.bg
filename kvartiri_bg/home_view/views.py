@@ -5,4 +5,4 @@ from django.views.generic import View
 class IndexView(View):
 
     def get(self, request):
-        return render(request, 'index.html')
+        return render(request, 'home.html')
