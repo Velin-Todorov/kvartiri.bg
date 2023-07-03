@@ -56,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'kvartiri_bg.urls'
+ROOT_URLCONF = 'vercel_app.urls'
 
 TEMPLATES = [
     {
