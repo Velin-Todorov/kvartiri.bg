@@ -8,6 +8,5 @@
             "src": "/(.*)",
             "dest": "kvartiri_bg/wsgi.py"
         }
-    ],
-    "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+    ]
 }
