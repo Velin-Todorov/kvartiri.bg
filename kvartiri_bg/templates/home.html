@@ -1,7 +1,43 @@
 {% extends 'base.html' %}
 
 <body>
-    {% block main %}
-    <h1>Welcome to kvartiri.bg</h1>
-    {% endblock %}
+  {% block nav %}
+  <nav>
+    <ul class="navigation__list navigation__list--inline">
+      <li class="navigation__item">
+        <a href="/" class="navigation__link navigation__link--is-active"
+          >Home</a
+        >
+      </li>
+      <li class="navigation__item">
+        <a href="#" class="navigation__link">Search for a room</a>
+      </li>
+      <li class="navigation__item">
+        <a href="/about-us" class="navigation__link">About Us</a>
+      </li>
+      <li class="navigation__item">
+        <a href="#" class="navigation__link">Log in</a>
+      </li>
+      <li class="navigation__item">
+        <a href="#" class="navigation__link">Create account</a>
+      </li>
+    </ul>
+  </nav>
+
+  {% endblock %} {% block main %}
+  <h1>Welcome to kvartiri.bg</h1>
+
+  <section class="Search_root">
+    <div class="test"><h2>Here you will look for a room</h2></div>
+  </section>
+
+  <section class="popular-cities">
+    <h2>Here are popular cities</h2>
+  </section>
+
+  <section class="how does it work">
+    <h2>This section is about how the website works.</h2>
+  </section>
+
+  {% endblock %}
 </body>
