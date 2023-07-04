@@ -20,5 +20,5 @@ from home_view.views import IndexView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('/', IndexView.as_view(), name='home')
+    path('', IndexView.as_view(), name='home')
 ]
