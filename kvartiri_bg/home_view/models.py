@@ -3,6 +3,7 @@ from django_select2 import forms as s2forms
 
 # Create your models here.
 
+
 class Town(models.Model):
     """
     A model for a town in Bulgaria
@@ -15,14 +16,19 @@ class Property(models.Model):
     This is a model for a room 
     of any type - studio, single room, appartment
     """
-    class Type(models.TextChoices):
-        STUDIO = 'STUDIO', 'Studio'
-        APPARTMENT = 'APPARTMENT',  'Appartment'
-        ROOM = 'SINGLE_ROOM', 'Single Room'
 
+    STUDIO: tuple = 'STUDIO', 'Studio'
+    APPARTMENT: tuple = 'APPARTMENT', 'Appartment'
+    ROOM: tuple = 'SINGLE_ROOM', 'Single Room'
+
+    CHOICES = [
+        STUDIO,
+        APPARTMENT,
+        ROOM
+    ]
 
     size = models.IntegerField()
-    type = models.CharField(choices=Type.choices, max_length=11)
+    type = models.CharField(choices=CHOICES, max_length=11)
     price_per_month = models.DecimalField(max_digits=20, decimal_places=2)
     landlord = models.TextField()
     town = models.ForeignKey(Town, on_delete=models.CASCADE)
