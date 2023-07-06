@@ -1,4 +1,5 @@
 from django.db import models
+from django_select2 import forms as s2forms
 
 # Create your models here.
 
@@ -9,12 +10,19 @@ class Town(models.Model):
     name = models.TextField()
 
 
-class Room(models.Model):
+class Property(models.Model):
     """
     This is a model for a room 
     of any type - studio, single room, appartment
     """
+    class Type(models.TextChoices):
+        STUDIO = 'STUDIO', 'Studio'
+        APPARTMENT = 'APPARTMENT',  'Appartment'
+        ROOM = 'SINGLE_ROOM', 'Single Room'
+
+
     size = models.IntegerField()
+    type = models.CharField(choices=Type.choices, max_length=11)
     price_per_month = models.DecimalField(max_digits=20, decimal_places=2)
     landlord = models.TextField()
     town = models.ForeignKey(Town, on_delete=models.CASCADE)
@@ -28,8 +36,6 @@ class Room(models.Model):
     utilities_included = models.BooleanField()
 
 
-
-
 class Landlord(models.Model):
     pass
 
@@ -37,3 +43,8 @@ class Landlord(models.Model):
 class User(models.Model):
     pass
 
+
+class Townidget(s2forms.ModelSelect2Widget):
+    search_fields = [
+        ''
+    ]
