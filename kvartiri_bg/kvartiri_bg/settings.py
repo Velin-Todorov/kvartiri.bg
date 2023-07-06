@@ -14,7 +14,6 @@ from pathlib import Path
 from dotenv import get_key
 import os
 from dotenv import load_dotenv
-import dj_database_url
 
 load_dotenv()
 
@@ -42,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_select2',
     'home_view'
 ]
 
@@ -75,6 +75,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kvartiri_bg.wsgi.app'
 
+CACHES = {
+    # … default cache config and others
+    
+    "default": {
+        "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+        "LOCATION": "127.0.0.1:11211",
+    },
+
+    "select2": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# Tell select2 which cache configuration to use:
+SELECT2_CACHE_BACKEND = "select2"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
