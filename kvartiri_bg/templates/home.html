@@ -4,6 +4,7 @@
   {% block nav %}
   <nav>
     <ul class="navigation__list navigation__list--inline">
+      <li class="logo">kvartiri.bg</li>
       <li class="navigation__item">
         <a href="/" class="navigation__link navigation__link--is-active"
           >Home</a
@@ -24,11 +25,17 @@
     </ul>
   </nav>
 
-  {% endblock %} {% block main %}
+  {% endblock %} 
+  {% block main %}
   <h1>Welcome to kvartiri.bg</h1>
 
   <section class="Search_root">
-    <div class="test"><h2>Here you will look for a room</h2></div>
+    <div class="test">
+      <h2>Here you will look for a room</h2>
+      <div class="search_bar">
+        <input type="text" placeholder="Search">
+      </div>
+    </div>
   </section>
 
   <section class="popular-cities">
