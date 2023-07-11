@@ -3,47 +3,39 @@
 <body>
   {% block nav %}
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/">
-      <img src="https://t3.ftcdn.net/jpg/05/43/41/94/360_F_543419408_mcZLSExVJSyjWxD33SQrCPugtbAlfdry.jpg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-      kvartiri.bg
-    </a>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <span style="display: -webkit-flex; display: flex; flex-direction: row; justify-items: end;">
-          <a class="nav-link border" href="/search">Search for a room</a>
-        </span>
-        <a class="nav-link border" href="/rent_out">Rent your place for free</a>
-        <a class="nav-link border" href="Login">Log in</a>
-        <a class="nav-link border" href="/create_account">Create account</a>
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">kvartiri.bg</a>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav d-flex flex-row">
+          <li class="nav-item p-2">
+            <a class="nav-link" href="#">Search for a room</a>
+          </li>
+          <li class="nav-item p-2">
+            <a class="nav-link" href="#">Rent your place for free</a>
+          </li>
+          <li class="nav-item p-2">
+            <a class="nav-link" href="#">Create an account</a>
+          </li>
+          <li class="nav-item p-2">
+            <a class="nav-link" href="#">Log in</a>
+          </li>
+        </ul>
       </div>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        {% csrf_token %}
+        {{ form }}
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>  
     </div>
-  </div>
-</nav>
+  </nav>
 
-  {% endblock %} 
-  {% block main %}
-  <h1>Welcome to kvartiri.bg</h1>
-
+  {% endblock %} {% block main %}
   <section class="Search_root">
     <div class="test">
       <h2>Here you will look for a room</h2>
-      <div class="search_form">
-        <form>
-          {% csrf_token %}
-          {{ form }}
-        </form>
       </div>
     </div>
   </section>
-
-  <section class="popular-cities">
-    <h2>Here are popular cities</h2>
-  </section>
-
-  <section class="how does it work">
-    <h2>This section is about how the website works.</h2>
-  </section>
-
   {% endblock %}
 </body>
