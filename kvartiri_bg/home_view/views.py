@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import View
 from .forms import SearchForm
 
@@ -14,3 +14,12 @@ class IndexView(View):
         """
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form_class()
+        
+        
+
+        return render(request, self.template_name, {'form': form})
+
+        

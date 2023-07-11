@@ -47,10 +47,14 @@ class Landlord(models.Model):
 
 
 class User(models.Model):
-    pass
+    first_name = models.TextField()
+    email = models.EmailField()
+    password = models.TextField()
+    is_premium = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
+    saved_properties = models.ManyToManyField(Property, related_name='saved_propertiies', null=True, blank=True)
+    profile_picture = models.ImageField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
 
 
-class Townidget(s2forms.ModelSelect2Widget):
-    search_fields = [
-        ''
-    ]
