@@ -1,5 +1,5 @@
 from django.db import models
-from django_select2 import forms as s2forms
+from rest_framework import serializers
 
 # Create your models here.
 
@@ -55,6 +55,8 @@ class User(models.Model):
     saved_properties = models.ManyToManyField(Property, related_name='saved_propertiies', null=True, blank=True)
     profile_picture = models.ImageField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
     
 
 

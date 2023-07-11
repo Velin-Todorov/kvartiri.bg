@@ -21,5 +21,6 @@ from home_view.views import IndexView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='home'),
-     path("select2/", include("django_select2.urls")),
+    path('auth/', include('auth_api.urls'))
+
 ]
