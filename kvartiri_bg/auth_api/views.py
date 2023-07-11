@@ -12,3 +12,12 @@ class LoginView(APIView):
     def get(self, request, *args, **kwargs):
         serializer = UserModelSerializer()
         return Response({'serializer': serializer})
+    
+
+class RegisterView(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'login.html'
+
+    def get(self, request, *args, **kwargs):
+        serializer = UserModelSerializer()
+        return Response({'serializer': serializer})
