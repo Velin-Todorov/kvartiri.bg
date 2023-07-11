@@ -1,7 +1,14 @@
 from django.shortcuts import render
-from django.views.generic import View
+from .forms import UserModelSerializer
+from rest_framework.views import APIView
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response
 # Create your views here.
 
-class LoginView(View):
-    form_class = SearchForm
-    template_name = 'home.html'
+class LoginView(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'login.html'
+
+    def get(self, request, *args, **kwargs):
+        serializer = UserModelSerializer()
+        return Response({'serializer': serializer})
