@@ -46,8 +46,14 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'home_view',
-    'auth_api'
+    'auth_api',
+    'tailwind',
+    'theme',
+    'django_browser_reload'
 ]
+
+TAILWIND_APP_NAME = 'theme'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware'
 ]
 
 ROOT_URLCONF = 'kvartiri_bg.urls'
@@ -64,7 +71,7 @@ ROOT_URLCONF = 'kvartiri_bg.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'theme/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,6 +127,12 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 # DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 # DATABASES['default']['OPTIONS']['charset'] = 'utf8mb4'

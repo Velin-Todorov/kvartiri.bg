@@ -19,6 +19,7 @@ from django.urls import path, include
 from home_view.views import IndexView
 
 urlpatterns = [
+    path("__reload__/", include("django_browser_reload.urls")),
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='home'),
     path('auth/', include('auth_api.urls'))
