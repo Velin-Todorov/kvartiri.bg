@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import get_key
 import os
 from dotenv import load_dotenv
+from django.urls import reverse_lazy
 
 load_dotenv()
 
@@ -46,7 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'home_view',
-    'auth_api',
+    'auth_views',
     'tailwind',
     'theme',
     'django_browser_reload'
@@ -92,34 +93,8 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
         "LOCATION": "127.0.0.1:11211",
-    },
-
-    "select2": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/2",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
     }
 }
-
-# Tell select2 which cache configuration to use:
-SELECT2_CACHE_BACKEND = "select2"
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#     'ENGINE': 'django.db.backends.mysql',
-#     'NAME': os.environ.get('DB_NAME'),
-#     'HOST': os.environ.get('DB_HOST'),
-#     'PORT': os.environ.get('DB_PORT'),
-#     'USER': os.environ.get('DB_USER'),
-#     'PASSWORD': os.environ.get('DB_PASSWORD'),
-#     'OPTIONS': {'ssl': {'ca': os.environ.get('MYSQL_ATTR_SSL_CA')}}
-#   }
-# }
 
 DATABASES = {
     'default': {
@@ -158,6 +133,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SITE_ID = 1
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -169,6 +145,13 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+
+AUTH_USER_MODEL = 'auth_views.User'
+
+
+LOGIN_REDIRECT_URL = reverse_lazy('index')
+LOGOUT_REDIRECT_URL = reverse_lazy('index')
 
 
 # Static files (CSS, JavaScript, Images)
