@@ -150,8 +150,8 @@ USE_TZ = True
 AUTH_USER_MODEL = 'auth_views.User'
 
 
-LOGIN_REDIRECT_URL = reverse_lazy('index')
-LOGOUT_REDIRECT_URL = reverse_lazy('index')
+LOGIN_REDIRECT_URL = reverse_lazy('home')
+LOGOUT_REDIRECT_URL = reverse_lazy('home')
 
 
 # Static files (CSS, JavaScript, Images)
