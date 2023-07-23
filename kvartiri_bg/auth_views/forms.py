@@ -1,6 +1,6 @@
 from django.contrib.auth import forms as auth_forms, get_user_model
 from django import forms
-from .models import User
+from .models import UserProfile
 
 
 UserModel = get_user_model()
@@ -53,4 +53,9 @@ class RegistrationForm(auth_forms.UserCreationForm):
             )
         }   
 
+
+class CreateProfileForm(auth_forms.UserCreationForm):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
     

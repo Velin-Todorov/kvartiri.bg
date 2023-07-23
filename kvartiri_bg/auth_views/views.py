@@ -3,8 +3,7 @@ from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from .models import User
-
-from .forms import RegistrationForm, LoginUserForm
+from .forms import RegistrationForm, LoginUserForm, CreateProfileForm
 from django.contrib.auth import views as auth_views, login, get_user_model
 # Create your views here
 
@@ -20,12 +19,10 @@ from django.contrib.auth import views as auth_views, login, get_user_model
 class RegisterUserView(CreateView):
     form_class = RegistrationForm
     template_name = 'registration.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('finish_profile')
     
     def form_valid(self, form):
-        result = super().form_valid(form)
-        login(self.request, self.object)
-        return result
+        return super().form_valid(form)  
 
 
     def form_invalid(self, form):
@@ -37,4 +34,10 @@ class LoginUserView(auth_views.LoginView):
     form_class = LoginUserForm
 
 
+class CreateProfileView(CreateView):
+    form_class = CreateProfileForm
+    template_name = 'create_profile.html'
 
+
+class UserProfile():
+    pass
