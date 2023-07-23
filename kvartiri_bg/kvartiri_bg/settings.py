@@ -36,6 +36,8 @@ ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 # Application definition
 
 INSTALLED_APPS = [
+
+    #built-in apps
     'django.contrib.admin',
     'django.contrib.sites',
     'django.contrib.auth',
@@ -43,14 +45,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_select2',
-    'rest_framework',
 
+    #project apps
     'home_view',
     'auth_views',
+
+    # external apps
     'tailwind',
     'theme',
-    'django_browser_reload'
+    'django_browser_reload',
+    'widget_tweaks'
 ]
 
 TAILWIND_APP_NAME = 'theme'
