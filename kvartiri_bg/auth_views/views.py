@@ -18,23 +18,17 @@ from django.contrib.auth import views as auth_views, login, get_user_model
 
 
 class RegisterUserView(CreateView):
-    template_name_suffix = ''
     form_class = RegistrationForm
     template_name = 'registration.html'
     success_url = reverse_lazy('login')
     
     def form_valid(self, form):
-        print(form.is_valid())
-        print(form.data)
         result = super().form_valid(form)
-
         login(self.request, self.object)
-
         return result
 
 
     def form_invalid(self, form):
-        print('form is invalid')
         return super().form_invalid(form)
 
 
