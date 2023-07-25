@@ -4,7 +4,7 @@
 
 {% block head %}
 <head>
-	<title>Django Tailwind</title>
+	<title>Django Tailwi</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -12,7 +12,8 @@
 </head>
 {% endblock %}
 
-<body class="bg-gray-50 font-serif leading-normal tracking-normal h-full w-full">
+{% block body %}
+<body class="font-serif leading-normal tracking-normal bg-slate-50">
 	
 	{% block header %}
 	{% endblock %}
@@ -65,6 +66,7 @@
 	{% endblock %}
 			  
 </body>
+{% endblock %}
 
 
 
