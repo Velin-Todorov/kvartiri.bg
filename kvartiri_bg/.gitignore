@@ -2,3 +2,5 @@ venv/
 /.env
 db.*
 *.pyc
+node*
+*.json
