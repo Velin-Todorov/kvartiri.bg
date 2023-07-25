@@ -29,7 +29,7 @@ class Profile(models.Model):
     looking_for = models.CharField(choices=CHOICES, max_length=11, blank=False, null=True)
     about = models.TextField(blank=True, null=True)
     budget = models.CharField(choices=PRICE_RANGE, max_length=18, blank=False, null=True)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
     is_verified = models.BooleanField(default=False)
     saved_properties = models.ForeignKey(Property, null=True, blank=True, on_delete=models.DO_NOTHING)
     profile_picture = models.ImageField(default='default.jpg', upload_to='profile_pics/')
