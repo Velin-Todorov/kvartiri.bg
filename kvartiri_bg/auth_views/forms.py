@@ -1,6 +1,8 @@
 from django.contrib.auth import forms as auth_forms, get_user_model
 from django import forms
-from .models import UserProfile
+from django.forms import ModelForm
+from .models import Profile
+from .constants import CHOICES, PRICE_RANGE
 
 
 UserModel = get_user_model()
@@ -54,8 +56,12 @@ class RegistrationForm(auth_forms.UserCreationForm):
         }   
 
 
-class CreateProfileForm(auth_forms.UserCreationForm):
+class CreateProfileForm(ModelForm):
     class Meta:
-        model = UserProfile
-        fields = '__all__'
+        model = Profile
+        fields = ['looking_for', 'about', 'budget', 'profile_picture']
+        widgets = {
+            'looking_for': forms.RadioSelect(choices=CHOICES),
+            'budget': forms.RadioSelect(choices=PRICE_RANGE)
+        }
     
