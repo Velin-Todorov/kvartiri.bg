@@ -16,7 +16,9 @@
 <div class="space-y-10 divide-y divide-gray-900/10">
     <div class="grid grid-cols-2 gap-x-8 gap-y-8 md:grid-cols-3 py-10">
       
-      <form class="bg-white col-start-2 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl relative">
+      <form class="bg-white col-start-2 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl relative" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.errors }}
         <div class="px-4 py-6 sm:p-8">
           <div>
             <label class="text-base font-semibold text-gray-900">What are you looking for ?</label>
@@ -26,7 +28,7 @@
               <div class="space-y-4">
                 {% for choice in form.looking_for %}
                 <div class="flex items-center">
-                  <input type="checkbox" checked class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                  {{ choice.tag }}
                   <label for="{{ choice.id_choice_label }}" class="ml-3 block text-sm font-medium leading-6 text-gray-900">{{ choice.choice_label }}</label>
                 </div>
                 {% endfor %}
@@ -44,7 +46,7 @@
               <div class="space-y-4">
                 {% for b in form.budget %}
                 <div class="flex items-center">
-                  <input type="checkbox" type="radio" class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                  {{ b.tag }}
                   <label for="{{ b.id_choice_label }}" class="ml-3 block text-sm font-medium leading-6 text-gray-900">{{ b.choice_label }}</label>
                 </div>
                 {% endfor %}
