@@ -1,7 +1,7 @@
-from django.forms.models import BaseModelForm
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from .forms import RegistrationForm, LoginUserForm, CreateProfileForm
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth import views as auth_views, login, get_user_model
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from .models import Profile, User
@@ -10,12 +10,25 @@ from .models import Profile, User
 
 User = get_user_model()
 
-class RegisterUserView(CreateView):
+class RegisterUserView(FormView):
     form_class = RegistrationForm
     template_name = 'registration.html'
     success_url = reverse_lazy('finish_profile')
     
     def form_valid(self, form):
+        email = form.cleaned_data['email']
+        password = form.cleaned_data['password1']
+        first_name = form.cleaned_data['first_name']
+        last_name = form.cleaned_data['last_name']
+
+        user = User(
+            email=email, 
+            password=make_password(password),
+            first_name=first_name,
+            last_name=last_name
+        )
+        user.save()
+        login(self.request, user)
         return super().form_valid(form)  
 
 
@@ -25,7 +38,12 @@ class RegisterUserView(CreateView):
 
 class LoginUserView(auth_views.LoginView):
     template_name = 'login.html'
-    form_class = LoginUserForm
+    authentication_form = LoginUserForm
+    redirect_authenticated_user = True
+
+
+class LogoutUserView(auth_views.LogoutView):
+    pass
 
 
 class CreateProfileView(FormView, PermissionRequiredMixin):
