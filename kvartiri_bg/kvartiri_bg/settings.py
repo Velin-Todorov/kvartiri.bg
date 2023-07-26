@@ -137,6 +137,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
+
+
 SITE_ID = 1
 
 # Internationalization
@@ -153,7 +156,7 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'auth_views.User'
 
-
+LOGIN_URL = '/auth/login'
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGOUT_REDIRECT_URL = reverse_lazy('home')
 

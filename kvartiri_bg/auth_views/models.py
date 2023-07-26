@@ -1,7 +1,6 @@
 from django.db import models
 from .constants import CHOICES, PRICE_RANGE
 from home_view.models import Property
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager, UserManager, User
 # Create your models here.
 
@@ -22,6 +21,7 @@ class User(AbstractUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
 
+from django.conf import settings
 class Profile(models.Model):
     """
     Model that contains app-specific info about the user
