@@ -1,4 +1,4 @@
-from .views import IndexView
+from .views import IndexView, ChooseYourProfile
 from django.urls import path
 
 
