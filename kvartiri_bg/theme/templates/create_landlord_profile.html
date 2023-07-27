@@ -44,12 +44,11 @@
           {% endif %}
 
           <div>
-            <label class="text-base font-semibold text-gray-900">What are you looking for ?</label>
-            <p class="text-sm text-gray-500">Select all that apply to you</p>
+            <label class="text-base font-semibold text-gray-900">Choose what applies to you</label>
+            <p class="text-sm text-gray-500">Choose what applies to you</p>
             <fieldset class="mt-4">
-              <legend class="sr-only">Property Choice</legend>
               <div class="space-y-4">
-                {% for choice in form.looking_for %}
+                {% for choice in form.type %}
                 <div class="flex items-center">
                   {{ choice.tag }}
                   <label for="{{ choice.id_choice_label }}" class="ml-3 block text-sm font-medium leading-6 text-gray-900">{{ choice.choice_label }}</label>
@@ -60,22 +59,6 @@
           </div>
 
           <br>
-
-          <div>
-            <label class="text-base font-semibold text-gray-900">What is your budget?</label>
-            <p class="text-sm text-gray-500">Select the appropriate choice </p>
-            <fieldset class="mt-4">
-              <legend class="sr-only">Property Choice</legend>
-              <div class="space-y-4">
-                {% for b in form.budget %}
-                <div class="flex items-center">
-                  {{ b.tag }}
-                  <label for="{{ b.id_choice_label }}" class="ml-3 block text-sm font-medium leading-6 text-gray-900">{{ b.choice_label }}</label>
-                </div>
-                {% endfor %}
-              </div>
-            </fieldset>
-          </div>
 
           <br> 
             <div class="col-span-full">
