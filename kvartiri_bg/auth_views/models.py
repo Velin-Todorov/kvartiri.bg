@@ -1,26 +1,28 @@
 from django.db import models
 from .constants import CHOICES, PRICE_RANGE, TYPE, PROFILE_TYPE
 from home_view.models import Property
-from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager, UserManager
+from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager, UserManager, User
 from datetime import datetime, timezone
 # Create your models here.
 
 
-class CustomUserManager(UserManager):
-    pass
+
+User._meta.get_field('email')._unique = True
+# class CustomUserManager(UserManager):
+#     pass
 
 
-class User(AbstractUser, PermissionsMixin):
-    """
-    Custom User model
-    """
-    email = models.EmailField(unique=True)
-    username = None
-    type = models.CharField(choices=PROFILE_TYPE, max_length=11, default=PROFILE_TYPE[0][0])
-    objects = CustomUserManager()
+# class User(AbstractUser, PermissionsMixin):
+#     """
+#     Custom User model
+#     """
+#     email = models.EmailField(unique=True)
+#     username=models.TextField(blank=True, null=True)
+#     type = models.CharField(choices=PROFILE_TYPE, max_length=11, default=PROFILE_TYPE[0][0])
+#     objects = CustomUserManager()
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['type']
+#     USERNAME_FIELD = "email"
+#     REQUIRED_FIELDS = ['type']
 
 
 from django.conf import settings
@@ -39,7 +41,6 @@ class Profile(models.Model):
     saved_properties = models.ForeignKey(Property, null=True, blank=True, on_delete=models.DO_NOTHING)
     profile_picture = models.ImageField(default='default.jpg', upload_to='profile_pics/')
 
-    USERNAME_FIELD = 'email'
 
 class LandlordProfile(models.Model):
     """
@@ -62,4 +63,4 @@ class LandlordProfile(models.Model):
         current_datetime = datetime.now()
         return (current_datetime - self.created_at).days
 
-    USERNAME_FIELD = 'email'
+  

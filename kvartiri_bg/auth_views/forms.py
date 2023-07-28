@@ -1,13 +1,14 @@
 from django.contrib.auth import forms as auth_forms, get_user_model
 from django import forms
 from django.forms import ModelForm
-from .models import Profile, LandlordProfile
+from .models import Profile, LandlordProfile, User
 from .constants import CHOICES, PRICE_RANGE, PROFILE_TYPE, TYPE
 
 
 UserModel = get_user_model()
 
-class LoginUserForm(auth_forms.AuthenticationForm):
+class LoginUserForm(ModelForm):
+
     email = forms.CharField(
         label='Email',
         widget=forms.EmailInput(

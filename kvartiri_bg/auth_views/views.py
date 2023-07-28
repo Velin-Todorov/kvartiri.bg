@@ -1,3 +1,5 @@
+from django.contrib.auth.forms import AuthenticationForm
+from django.http import HttpResponse
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
@@ -23,22 +25,14 @@ class RegisterUserView(FormView):
     def form_valid(self, form):
         email = form.cleaned_data['email']
         password = form.cleaned_data['password1']
-        type = form.cleaned_data['type']
 
         user = User(
             email=email, 
-            password=make_password(password),
-            type=type 
+            password=make_password(password)
         )
         user.save()
 
         login(self.request, user)
-        if type == 'LANDLORD':
-            return redirect('finish_landlord_profile')
-
-        elif type == 'TENANT':
-            return redirect('finish_profile') 
-
 
     def form_invalid(self, form):
         return super().form_invalid(form)
@@ -47,8 +41,11 @@ class RegisterUserView(FormView):
 class LoginUserView(auth_views.LoginView):
     template_name = 'login.html'
     authentication_form = LoginUserForm
-    redirect_authenticated_user = True
-        
+    redirect_authenticated_user = False
+
+    def form_invalid(self, form: AuthenticationForm) -> HttpResponse:
+        print(form.errors)
+        return super().form_invalid(form)
 
 class LogoutUserView(auth_views.LogoutView):
     pass
@@ -60,10 +57,10 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
     """
     form_class = CreateProfileForm
     template_name = 'create_profile.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('profile')
 
     def form_valid(self, form):
-        user = User.objects.filter(type='TENANT')
+        user = User.objects.all()
 
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']
@@ -100,7 +97,7 @@ class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
     success_url = reverse_lazy('landlord_profile')
 
     def form_valid(self, form):
-        user = User.objects.filter(type='LANDLORD')
+        user = User.objects.all()
 
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']

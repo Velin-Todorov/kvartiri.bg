@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     #project apps
     'home_view',
     'auth_views',
+    'user_profile',
 
     # external apps
     'tailwind',
@@ -154,10 +155,8 @@ USE_I18N = True
 USE_TZ = True
 
 
-AUTH_USER_MODEL = 'auth_views.User'
-
 LOGIN_URL = '/auth/login'
-LOGIN_REDIRECT_URL = reverse_lazy('home')
+LOGIN_REDIRECT_URL = reverse_lazy('profile')
 LOGOUT_REDIRECT_URL = reverse_lazy('home')
 
 
