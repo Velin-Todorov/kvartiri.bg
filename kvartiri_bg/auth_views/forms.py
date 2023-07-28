@@ -7,7 +7,7 @@ from .constants import CHOICES, PRICE_RANGE, PROFILE_TYPE, TYPE
 
 UserModel = get_user_model()
 
-class LoginUserForm(ModelForm):
+class LoginUserForm(forms.Form):
 
     email = forms.CharField(
         label='Email',
@@ -28,6 +28,8 @@ class LoginUserForm(ModelForm):
             }
         )
     )
+    
+    
 
         
 
