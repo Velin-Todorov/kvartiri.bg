@@ -47,18 +47,16 @@ class RegisterUserView(FormView):
 class LoginUserView(FormView):
     template_name = 'login.html'
     form_class = LoginUserForm
-    success_url = reverse_lazy('home')
-
+    
 
     def form_valid(self, form):
         email = form.cleaned_data['email']
         password = form.cleaned_data['password']
-
+        
         user = authenticate(self.request, email=email, password =password)
-
+        
         if user is not None:
             login(self.request, user)
-
             if user.profile_finished:
                 return redirect(reverse('profile/<int:pk>', args=user.pk))
             else:
@@ -70,11 +68,15 @@ class LoginUserView(FormView):
         return super().form_valid(form)
 
 
-
     def form_invalid(self, form) -> HttpResponse:
         return super().form_invalid(form)
+    
+    def get_success_url(self) -> str:
+        print(self.request.user)
+        return reverse('profile', kwargs={'pk':self.request.user.pk})
 
-        
+
+
 class LogoutUserView(auth_views.LogoutView):
     pass
 
@@ -85,7 +87,6 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
     """
     form_class = CreateProfileForm
     template_name = 'create_profile.html'
-    success_url = reverse_lazy('home')
 
     def form_valid(self, form):
         user = User.objects.filter(type='TENANT')
@@ -116,6 +117,11 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
         return super().form_invalid(form)
 
 
+    def get_success_url(self) -> str:
+        user = Profile.objects.get(user_id = self.request.user.pk).pk
+        return reverse('profile', kwargs={'pk':self.request.user.pk})
+
+
 class ChooseProfileView(TemplateView):
     template_name = 'choose_profile_type.html'
 
@@ -123,7 +129,6 @@ class ChooseProfileView(TemplateView):
 class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
     form_class = CreateLandlordProfileForm
     template_name = 'create_landlord_profile.html'
-    success_url = reverse_lazy('home')
 
     def form_valid(self, form):
         user = User.objects.filter(type='LANDLORD')
@@ -150,3 +155,7 @@ class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
     def form_invalid(self, form):
         print('Invalid')
         return super().form_invalid(form)
+    
+    def get_success_url(self) -> str:
+        user = LandlordProfile.objects.get(user_id = self.request.user.pk).pk
+        return reverse('profile', kwargs={'pk':user})
