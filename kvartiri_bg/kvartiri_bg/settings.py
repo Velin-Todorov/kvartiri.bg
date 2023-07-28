@@ -32,6 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 
+AUTH_USER_MODEL = 'auth_views.User'
 
 # Application definition
 
@@ -155,8 +156,8 @@ USE_I18N = True
 USE_TZ = True
 
 
-LOGIN_URL = '/auth/login'
-LOGIN_REDIRECT_URL = reverse_lazy('profile')
+LOGIN_URL = '/auth_views/login'
+# LOGIN_REDIRECT_URL = ''
 LOGOUT_REDIRECT_URL = reverse_lazy('home')
 
 
