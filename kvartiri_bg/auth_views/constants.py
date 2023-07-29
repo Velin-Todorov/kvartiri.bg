@@ -15,7 +15,6 @@ TENANT: tuple = 'TENANT', 'Tenant'
 LANDLORD:tuple = 'LANDLORD', 'Landlord'
 
 CHOICES = [
-    NO_CHOICES,
     STUDIO,
     APPARTMENT,
     ROOM

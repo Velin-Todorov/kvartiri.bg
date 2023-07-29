@@ -58,7 +58,7 @@ class LoginUserView(FormView):
         if user is not None:
             login(self.request, user)
             if user.profile_finished:
-                return redirect(reverse('profile/<int:pk>', args=user.pk))
+                return redirect(reverse('profile', kwargs={'pk': user.pk}))
             else:
                 if user.type == 'TENANT':
                     return redirect('finish_profile')
@@ -89,7 +89,7 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
     template_name = 'create_profile.html'
 
     def form_valid(self, form):
-        user = User.objects.filter(type='TENANT')
+        user = User.objects.filter(type='TENANT').last()
 
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']
@@ -104,11 +104,13 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
             looking_for=looking_for,
             about=about,
             budget=budget,
-            is_finished = True,
+            profile_finished = True,
             profile_picture=profile_picture,
-            user_id = user.last().pk
+            user_id = user.pk
         )
-        user.last().profile_finished = True
+
+        user.profile_finished = True
+        user.save()
         return super().form_valid(form)  
 
 
@@ -119,7 +121,7 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
 
     def get_success_url(self) -> str:
         user = Profile.objects.get(user_id = self.request.user.pk).pk
-        return reverse('profile', kwargs={'pk':self.request.user.pk})
+        return reverse('profile', kwargs={'pk':user})
 
 
 class ChooseProfileView(TemplateView):
@@ -131,7 +133,7 @@ class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
     template_name = 'create_landlord_profile.html'
 
     def form_valid(self, form):
-        user = User.objects.filter(type='LANDLORD')
+        user = User.objects.filter(type='LANDLORD').last()
 
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']
@@ -144,11 +146,12 @@ class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
             last_name = last_name,
             about=about,
             profile_picture=profile_picture,
-            is_finished = True,
+            profile_finished = True,
             type = type,
             user_id = user.last().pk
         )
-        user.last().profile_finished = True
+        user.profile_finished = True
+        user.save()
         return super().form_valid(form)  
 
 
@@ -158,4 +161,4 @@ class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
     
     def get_success_url(self) -> str:
         user = LandlordProfile.objects.get(user_id = self.request.user.pk).pk
-        return reverse('profile', kwargs={'pk':user})
+        return reverse('landlord_profile', kwargs={'pk':user})

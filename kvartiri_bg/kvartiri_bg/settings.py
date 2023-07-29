@@ -172,8 +172,8 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = '/static'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Directory where uploaded media is saved.
-MEDIA_URL = '/media/' # Public URL at the browser
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/profile_pics/') # Directory where uploaded media is saved.
+MEDIA_URL = '/media/profile_pics/' # Public URL at the browser
 
 
 
