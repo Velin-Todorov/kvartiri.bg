@@ -68,7 +68,9 @@ class CreateProfileForm(ModelForm):
         fields = [
             'first_name', 
             'last_name', 
-            'looking_for', 
+            'looking_for',
+            'phone_number',
+            'location',
             'about', 
             'budget', 
             'profile_picture'
@@ -85,7 +87,9 @@ class CreateLandlordProfileForm(ModelForm):
         fields = [
             'first_name',
             'last_name',
+            'phone_number',
             'about',
+            'location',
             'profile_picture',
             'type'
         ]
