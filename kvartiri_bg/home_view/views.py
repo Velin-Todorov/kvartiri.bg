@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
-from .forms import SearchForm
 
 # Create your views here.
 class IndexView(TemplateView):
