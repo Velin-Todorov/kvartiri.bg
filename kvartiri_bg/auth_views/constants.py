@@ -14,15 +14,23 @@ COMPANY: tuple = 'COMPANY', 'Company'
 TENANT: tuple = 'TENANT', 'Tenant'
 LANDLORD:tuple = 'LANDLORD', 'Landlord'
 
+OTHER = 'OTHER', 'Other'
+STUDENT = 'STUDENT', 'Student'
+WORKER = 'WORKER', 'Worker'
+
+OCCUPATION = [
+    OTHER,
+    STUDENT,
+    WORKER
+] 
+
 CHOICES = [
     STUDIO,
     APPARTMENT,
     ROOM
 ]
 
-
 PRICE_RANGE = [
-    NO_CHOICES,
     LOW,
     MID, 
     HIGH
