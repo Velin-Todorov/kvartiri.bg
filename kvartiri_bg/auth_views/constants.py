@@ -2,7 +2,7 @@ NO_CHOICES = None, ''
 
 STUDIO: tuple = 'STUDIO', 'Studio'
 APPARTMENT: tuple = 'APPARTMENT', 'Appartment'
-ROOM: tuple = 'SINGLE_ROOM', 'Single Room'
+ROOM: tuple = 'SINGLE ROOM', 'Single Room'
 
 LOW: tuple = '0 Lv. - 500 Lv.', '0 Lv. - 500 Lv.'
 MID: tuple = '500 Lv. - 1000 Lv.', '500 Lv. - 1000 Lv.'

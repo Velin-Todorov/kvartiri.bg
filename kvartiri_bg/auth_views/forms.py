@@ -2,7 +2,7 @@ from django.contrib.auth import forms as auth_forms, get_user_model
 from django import forms
 from django.forms import ModelForm
 from .models import Profile, LandlordProfile, User
-from .constants import CHOICES, PRICE_RANGE, PROFILE_TYPE, TYPE
+from .constants import CHOICES, PRICE_RANGE, PROFILE_TYPE, TYPE, OCCUPATION
 
 
 UserModel = get_user_model()
@@ -70,6 +70,7 @@ class CreateProfileForm(ModelForm):
             'last_name', 
             'looking_for',
             'phone_number',
+            'current_occupation',
             'location',
             'about', 
             'budget', 
@@ -78,7 +79,9 @@ class CreateProfileForm(ModelForm):
 
         widgets = {
             'looking_for': forms.RadioSelect(choices=CHOICES),
-            'budget': forms.RadioSelect(choices=PRICE_RANGE)
+            'budget': forms.RadioSelect(choices=PRICE_RANGE),
+            'profile_picture': forms.FileInput(),
+            'current_occupation': forms.RadioSelect(choices=OCCUPATION)
         }
 
 class CreateLandlordProfileForm(ModelForm):
