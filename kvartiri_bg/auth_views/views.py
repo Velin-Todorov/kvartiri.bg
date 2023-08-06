@@ -1,6 +1,5 @@
 from django.http import HttpResponse
-from django.views.generic.edit import FormView
-from django.views.generic import TemplateView
+from django.views.generic.edit import FormView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -10,15 +9,14 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth import views as auth_views, login, get_user_model, authenticate
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from .models import Profile, User, LandlordProfile
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.core.mail import EmailMessage
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
 from .tokens import account_activation_token
 from .utils import *
 # Create your views here
 
 User = get_user_model()
+
 
 class RegisterUserView(FormView):
     """
@@ -62,9 +60,9 @@ class LoginUserView(FormView):
         email = form.cleaned_data['email']
         password = form.cleaned_data['password']
         
-        user = authenticate(self.request, email=email, password =password)
-        
+        user = authenticate(self.request, email=email, password=password)
         if user is not None:
+            print(user)
             login(self.request, user)
             if user.profile_finished:
                 return redirect(reverse('profile', kwargs={'pk': user.pk}))
@@ -73,21 +71,22 @@ class LoginUserView(FormView):
                     return redirect('finish_profile')
                 elif user.type == 'LANDLORD':
                     return redirect('finish_landlord_profile')
-        
-        return super().form_valid(form)
+        else:
+            messages.error(self.request, 'Invalid Credentials!')
+            return super().form_invalid(form)
 
 
     def form_invalid(self, form) -> HttpResponse:
         return super().form_invalid(form)
     
     def get_success_url(self) -> str:
-        print(self.request.user)
         return reverse('profile', kwargs={'pk':self.request.user.pk})
 
 
 
 class LogoutUserView(auth_views.LogoutView):
     pass
+
 
 
 class ActivateView(View):
@@ -108,6 +107,13 @@ class ActivateView(View):
         user = self.get_user_from_email_verification_token(uidb64, token)
         user.email_confirmed = True
         user.save()
+        messages.add_message('You have verified your email successfully!')
+        if not user.profile_finished(): 
+            if user.type == 'TENANT':
+                return redirect('profile')
+            else:
+                return redirect('landlord_profile')
+        
         return redirect('login')
 
 
@@ -130,14 +136,13 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
         profile_picture = form.cleaned_data['profile_picture']
         phone_number = form.cleaned_data['phone_number']
 
-
         Profile.objects.create(
             first_name = first_name,
             last_name = last_name,
             looking_for=looking_for,
             about=about,
             budget=budget,
-            phone_number = phone_number,
+            phone_number=phone_number,
             profile_finished = True,
             profile_picture=profile_picture,
             user_id = user.pk
@@ -156,10 +161,6 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
     def get_success_url(self) -> str:
         user = Profile.objects.get(user_id = self.request.user.pk).pk
         return reverse('profile', kwargs={'pk':user})
-
-
-class ChooseProfileView(TemplateView):
-    template_name = 'choose_profile_type.html'
 
 
 class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
@@ -184,9 +185,8 @@ class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
             phone_number = phone_number,
             profile_finished = True,
             type = type,
-            user_id = user.last().pk
+            user_id = user.pk
         )
-
         user.profile_finished = True
         user.save()
         return super().form_valid(form)  
@@ -199,3 +199,4 @@ class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
     def get_success_url(self) -> str:
         user = LandlordProfile.objects.get(user_id = self.request.user.pk).pk
         return reverse('landlord_profile', kwargs={'pk':user})
+    
