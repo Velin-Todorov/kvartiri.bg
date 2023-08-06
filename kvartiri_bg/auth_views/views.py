@@ -24,7 +24,6 @@ class RegisterUserView(FormView):
     """
     form_class = RegistrationForm
     template_name = 'registration.html'
-    success_url = reverse_lazy('choose_profile')
 
     def form_valid(self, form):
         email = form.cleaned_data['email']
@@ -62,10 +61,15 @@ class LoginUserView(FormView):
         
         user = authenticate(self.request, email=email, password=password)
         if user is not None:
-            print(user)
             login(self.request, user)
             if user.profile_finished:
-                return redirect(reverse('profile', kwargs={'pk': user.pk}))
+                if user.type == 'TENANT':
+                    tenant = Profile.objects.get(user_id=user.pk)
+                    return redirect(reverse('profile', kwargs={'pk': tenant.pk}))
+                else:
+                    landlord = LandlordProfile.objects.get(user_id = user.pk)
+                    return redirect(reverse('landlord_profile', kwargs={'pk': landlord.pk}))
+
             else:
                 if user.type == 'TENANT':
                     return redirect('finish_profile')
@@ -135,7 +139,7 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
         budget = form.cleaned_data['budget']
         profile_picture = form.cleaned_data['profile_picture']
         phone_number = form.cleaned_data['phone_number']
-
+        
         Profile.objects.create(
             first_name = first_name,
             last_name = last_name,
@@ -172,6 +176,7 @@ class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
 
         first_name = form.cleaned_data['first_name']
         last_name = form.cleaned_data['last_name']
+        location = form.cleaned_data['location']
         about = form.cleaned_data['about']
         type = form.cleaned_data['type']
         profile_picture = form.cleaned_data['profile_picture']
@@ -181,10 +186,11 @@ class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
             first_name = first_name,
             last_name = last_name,
             about=about,
-            profile_picture=profile_picture,
-            phone_number = phone_number,
-            profile_finished = True,
             type = type,
+            phone_number = phone_number,
+            profile_picture=profile_picture,
+            location = location,
+            profile_finished = True,
             user_id = user.pk
         )
         user.profile_finished = True

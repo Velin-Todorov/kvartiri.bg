@@ -43,5 +43,5 @@ TYPE = [
 
 PROFILE_TYPE = [
     TENANT,
-    LANDLORD
+    LANDLORD 
 ]

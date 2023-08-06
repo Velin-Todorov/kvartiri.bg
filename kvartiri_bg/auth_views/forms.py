@@ -30,9 +30,6 @@ class LoginUserForm(forms.Form):
     )
     
     
-
-        
-
 class RegistrationForm(auth_forms.UserCreationForm):
     class Meta:
         model = UserModel
@@ -98,5 +95,6 @@ class CreateLandlordProfileForm(ModelForm):
         ]
 
         widgets = {
-            'type': forms.RadioSelect(choices=TYPE)
+            'type': forms.RadioSelect(choices=TYPE),
+            'profile_picture': forms.FileInput()
         }
