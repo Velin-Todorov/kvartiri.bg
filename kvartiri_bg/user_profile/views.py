@@ -1,14 +1,14 @@
-from typing import Any, Dict, Optional, Type
-from django.forms.models import BaseModelForm
-from django.shortcuts import render
-from django.views.generic import DetailView, UpdateView, TemplateView, DeleteView
+from typing import Any, Dict
+from django.views.generic import DetailView, UpdateView, DeleteView, ListView
 from django.contrib.auth.views import PasswordChangeView
 from auth_views.models import *
-from django import forms
 from .forms import *
+from properties.models import Property
 from django.urls import reverse, reverse_lazy
+from django.shortcuts import redirect
 from auth_views.forms import CreateLandlordProfileForm, CreateProfileForm
 from .mixins import UserContextMixin, SuccessMixin
+from properties.models import Property
 
 
 def create_profile_update_view(model_class, form_klass, template):
@@ -24,7 +24,26 @@ def create_delete_profile_view(model_class):
         model = model_class
         success_url = reverse_lazy('login')
         template_name = 'confirm_delete.html'
-    
+
+
+        def form_valid(self, form):
+            try:
+                user = self.request.user
+
+                if self.request.user.type == 'LANDLORD':
+                    profile = LandlordProfile.objects.get(user_id=user.pk)
+                
+                else:
+                    profile = Profile.objects.get(user_id=user.pk)
+                    
+                user.delete()
+                profile.delete()
+                
+            except Exception as e:
+                print(e)
+
+            return redirect(self.success_url)
+
     return DeleteProfile
 
 # Create your views here.
@@ -35,11 +54,11 @@ class ProfileView(UserContextMixin, DetailView):
 
 
 
-class LandlordProfileView(DetailView):
+class LandlordProfileView(UserContextMixin, DetailView):
     model = LandlordProfile
     context_object_name = 'landlord'
     template_name = 'landlord_profile.html'
-    succes_url = reverse_lazy('home')
+    
 
 
 class MessagesView(DetailView):
@@ -56,19 +75,6 @@ class LandlordMessages(DetailView):
     pass
 
 
-
-class FavouritesView(DetailView):
-    """
-    View that displays user's favourite properties
-    """
-    pass
-
-class LandlordOfferings(DetailView):
-    """
-    Landlord's offerings
-    """
-    pass
-
 class ChangePasswordView(SuccessMixin, PasswordChangeView):
     """
     Handles password change.
@@ -76,7 +82,31 @@ class ChangePasswordView(SuccessMixin, PasswordChangeView):
     template_name = 'change_password.html'
 
 
-EditTenantProfile = create_profile_update_view(Profile, CreateProfileForm, 'edit_profile.html')
+class FavouritesView(DetailView):
+    """
+    View that displays user's favourite properties
+    """
+    pass
+
+class LandlordOfferings(ListView):
+    """
+    Landlord's offerings
+    """
+    model = Property
+    paginate_by = 10
+    template_name = 'landlord_properties.html'
+    context_object_name = 'properties'
+
+    def get_queryset(self):
+        return self.model.objects.filter(landlord_id = LandlordProfile.objects.get(user_id=self.request.user.id).pk)
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['landlord'] = LandlordProfile.objects.get(user_id=self.request.user.id)
+        return context
+    
+
+EditTenantProfile = create_profile_update_view(Profile, CreateProfileForm, 'edit_profile.html') 
 EditLandlordProfile = create_profile_update_view(LandlordProfile, CreateLandlordProfileForm, 'edit_profile.html')
 DeleteTenantProfile = create_delete_profile_view(Profile)
 DeleteLandlordProfile = create_delete_profile_view(LandlordProfile)
