@@ -4,24 +4,36 @@
   <header class="bg-white">
     <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
       <div class="flex lg:flex-1">
-        <a href="#" class="-m-1.5 p-1.5">
+        <a href="{% url 'home' %}" class="-m-1.5 p-1.5">
           <span class="sr-only">Your Company</span>
           <img class="h-8 w-auto" src="https://static.vecteezy.com/system/resources/previews/006/309/677/original/creative-real-estate-logo-design-house-logo-design-real-estate-icon-free-vector.jpg" alt="">
         </a>
       </div>
 
       <div class="hidden lg:flex lg:gap-x-12">
-        <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Find for a room</a>
-        <a href="#" class="text-sm font-semibold leading-6 text-gray-900">Rent out your place</a>
-        <a href="{% url 'register' %}" class="text-sm font-semibold leading-6 text-gray-900">Create an account</a>
+        <a href="{% url 'all_properties' %}" class="text-sm font-semibold leading-6 text-gray-900">Find a room</a>
+        <a href="{% url 'rent_out' %}" class="text-sm font-semibold leading-6 text-gray-900">Rent out your place</a>
+        {% if user.is_authenticated %}
+          {% if profile %}
+            {% if user.type == 'LANDLORD' %}
+              <a href="{% url 'landlord_profile' pk=profile.pk %}" class="text-sm font-semibold leading-6 text-gray-900">My Profile</a>
+            {% else %}
+              <a href="{% url 'profile' pk=profile.pk %}" class="text-sm font-semibold leading-6 text-gray-900">My Profile</a>
+            {% endif %}
+          {% endif %}
+        {% else %}
+            <a href="{% url 'register' %}" class="text-sm font-semibold leading-6 text-gray-900">Register</a>
+        {% endif %}
+
       </div>
+
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
         {% if user.is_authenticated %}
         <a href="{% url 'logout' %}" class="text-sm font-semibold leading-6 text-gray-900">Log out<span
             aria-hidden="true">&rarr;</span></a>
         {% else %}
-        <a href="{% url 'login' %}" class="text-sm font-semibold leading-6 text-gray-900">Log in<span
-          aria-hidden="true">&rarr;</span></a>
+        <a href="{% url 'login' %}" class="text-sm font-semibold leading-6 text-gray-900">Log in
+          <spanaria-hidden="true"></span></a>
         {% endif %}
       </div>
     </nav>
@@ -35,8 +47,7 @@
       <h2 class="text-2xl font-bold tracking-tight text-gray-900">Recently added properties</h2>
       <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
         <div class="group relative">
-          <div
-            class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+          <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
             <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/1e/1e/dc/small-room.jpg?w=400&h=-1&s=1" alt="Front of men&#039;s Basic Tee in black."
               class="h-full w-full object-cover object-center lg:h-full lg:w-full">
           </div>
@@ -137,15 +148,13 @@
         </div>
         
         <div class="group relative">
-          <div
-            class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80 flex items-center justify-center">
+          <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80 flex items-center justify-center">
             Explore more offerings
-            --->
           </div>
           <div class="mt-4 flex justify-between">
             <div>
               <h3 class="text-sm text-gray-200">
-                <a href="#">
+                <a href="{% url "all_properties" %}">
                   <span aria-hidden="true" class="absolute inset-0"></span>
                 </a>
               </h3>
