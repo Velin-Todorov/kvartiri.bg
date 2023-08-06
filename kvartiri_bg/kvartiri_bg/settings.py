@@ -48,16 +48,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     #project apps
-    'home_view',
     'properties',
-    'auth_views',
     'user_profile',
+    'home_view',
+    'auth_views',
 
     # external apps
     'tailwind',
     'theme',
     'django_browser_reload',
-    'widget_tweaks'
+    'widget_tweaks',
+    'postman'
+    
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -163,7 +165,7 @@ LOGIN_URL = '/auth_views/login'
 # LOGIN_REDIRECT_URL = ''
 LOGOUT_REDIRECT_URL = reverse_lazy('home')
 
-
+# SMTP
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_FROM = os.getenv('EMAIL_FROM')
@@ -186,10 +188,14 @@ STATICFILES_DIRS = (
 
 STATIC_ROOT = '/static'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/profile_pics/') # Directory where uploaded media is saved.
-MEDIA_URL = '/media/profile_pics/' # Public URL at the browser
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Directory where uploaded media is saved.
+MEDIA_URL = '/media/' # Public URL at the browser
 
 
+#POSTMAN
+POSTMAN_DISALLOW_ANONYMOUS = True
+POSTMAN_DISALLOW_MULTIRECIPIENTS = True
+POSTMAN_DISALLOW_COPIES_ON_REPLY = True
 
 
 # Default primary key field type
