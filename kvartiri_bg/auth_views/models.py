@@ -1,7 +1,8 @@
 from django.db import models
 from .constants import CHOICES, PRICE_RANGE, TYPE, PROFILE_TYPE, OCCUPATION
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager, UserManager
-from datetime import datetime, timezone
+from datetime import datetime
+from properties.consts import bulgarian_cities
 
 # Create your models here.
 
@@ -17,7 +18,7 @@ class CustomUserManager(UserManager):
             email=self.normalize_email(email)
         )
 
-        user.set_password(password)
+        user.set_password(password) #make password
         user.is_superuser = True
         user.is_staff = True
         user.is_active = True
@@ -47,7 +48,7 @@ class LandlordProfile(models.Model):
     first_name = models.TextField(blank=True, null=True)
     last_name = models.TextField(blank=True, null=True)
     about = models.TextField(blank=True)
-    location = models.TextField(blank=True)
+    location = models.TextField(choices=bulgarian_cities, max_length=20, blank=False, default=bulgarian_cities[0][0])
     profile_finished = models.BooleanField(default=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=False)
     phone_number = models.IntegerField(blank=True, null=True)
@@ -72,7 +73,7 @@ class Profile(models.Model):
     last_name = models.TextField(blank=True, null=True)
     looking_for = models.CharField(choices=CHOICES, max_length=11, blank=False, default=CHOICES[0][0])
     phone_number = models.TextField(blank=True, null=True)
-    location = models.TextField(blank=True)
+    location = models.TextField(choices=bulgarian_cities, max_length=20, blank=False, default=bulgarian_cities[0][0])
     about = models.TextField(blank=True)
     profile_finished = models.BooleanField(default=False)
     budget = models.CharField(choices=PRICE_RANGE, max_length=18, blank=False, null=True, default=PRICE_RANGE[0][0])
