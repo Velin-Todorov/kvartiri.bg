@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block body %}
-<body class="bg-slate-150 flex flex-col min-h-screen h-full m-0 p-0">
+<body class="bg-slate-150 flex flex-col min-h-screen h-full m-0 p-0 bg-slate-150">
 	{% block header %}
 	{% endblock %}
 
@@ -24,30 +24,24 @@
 
 	
 	{% block footer %}
-		<footer class="bg-transparent border-t border-gray-200">
+		<footer class="bg-blue-100 border-t border-gray-200">
 			<div class="mx-auto max-w-7xl overflow-hidden px-6 py-5 sm:py-5 lg:px-8">
 			<nav class="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
 				<div class="pb-6">
-				<a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-900">About</a>
+					<a href="{% url 'about' %}" class="text-sm leading-6 text-gray-600 hover:text-gray-900">About</a>
 				</div>
+				
 				<div class="pb-6">
-				<a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Blog</a>
+					<a href="{% url 'how_does_it_work' %}" class="text-sm leading-6 text-gray-600 hover:text-gray-900">How does it work</a>
 				</div>
+
 				<div class="pb-6">
-				<a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Jobs</a>
+					<a href="{% url 'all_properties' %}" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Find a room</a>
 				</div>
-				<div class="pb-6">
-				<a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Press</a>
-				</div>
-				<div class="pb-6">
-				<a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Accessibility</a>
-				</div>
-				<div class="pb-6">
-				<a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Partners</a>
-				</div>
+
 			</nav>
 			
-			<p class="mt-3 text-center text-xs leading-5 text-gray-500">&copy; 2020 Your Company, Inc. All rights reserved.</p>
+			<p class="mt-3 text-center text-xs leading-5 text-gray-500">&copy; 2023 Kvartiri.bg. All rights reserved.</p>
 			</div>
 		</footer>
 	{% endblock %}

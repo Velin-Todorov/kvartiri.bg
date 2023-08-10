@@ -22,3 +22,9 @@ class DisplayProperties(GetContextBasedOnType, ListView):
 class RentOutPlace(TemplateView):
     template_name = 'rent_out.html'
 
+
+class AboutPage(TemplateView):
+    template_name = 'home_templates/about.html'
+
+class HowToUseIt(TemplateView):
+    template_name='home_templates/how_to_use.html'
