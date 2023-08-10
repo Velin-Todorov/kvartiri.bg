@@ -1,13 +1,28 @@
 {
-    "builds": [{
+    "builds": [
+        {
         "src": "kvartiri_bg/wsgi.py",
         "use": "@vercel/python",
         "config": {
             "maxLambdaSize": "15mb",
             "runtime": "python3.9"
           }
-    }],
+        },
+        {
+            "src": "build_files.sh",
+            "use": "@vercel/static-build",
+            "config": {
+              "distDir": "staticfiles_build"
+            }
+          }
+
+],
     "routes": [
+        {
+            "src": "theme/static_src/(.*)",
+            "dest": "/static_src/$1"
+        },
+
         {
             "src": "/(.*)",
             "dest": "kvartiri_bg/wsgi.py"
