@@ -14,10 +14,9 @@ class Property(models.Model):
     type = models.CharField(choices=CHOICES, default='ROOM', max_length=15)
     price_per_month = models.DecimalField(max_digits=20, decimal_places=2)
     landlord = models.ForeignKey(LandlordProfile, on_delete=models.CASCADE, null=True, blank=True)
-    about = models.TextField()
-    liked_by = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
+    about = models.TextField(blank=True, null=True)
     size = models.IntegerField()
-    town = models.CharField(choices=bulgarian_cities, blank=True, max_length=15, default=bulgarian_cities[0][0]) #dropdown field
+    town = models.CharField(choices=bulgarian_cities, blank=True, max_length=15, default=bulgarian_cities[0][0])
     address = models.TextField()
     images = models.ImageField(upload_to='property_pics', blank=True, null=True)
     furnished = models.CharField(choices=YES_NO, max_length=3, null=True, default=YES_NO[0][0])
@@ -28,3 +27,21 @@ class Property(models.Model):
 class Picture(models.Model):
     picture = models.ImageField(upload_to='media/property_pics')
     property = models.ForeignKey(Property, on_delete=models.CASCADE, null=True, blank=True)
+
+class MessageFromTenant(models.Model):
+    sender = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    recipient = models.ForeignKey(LandlordProfile, on_delete=models.CASCADE, null=True)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, null=True)
+    msg_content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class MessageFromLandlord(models.Model):
+    sender = models.ForeignKey(LandlordProfile, on_delete=models.CASCADE, null=True)
+    recipient = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, null=True)
+    msg_content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class Favourite(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    property = models.ManyToManyField(Property)
