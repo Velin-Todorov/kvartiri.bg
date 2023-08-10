@@ -1,0 +1,70 @@
+{% extends 'profile_page.html' %}
+
+{% block main %}
+<div>
+  <div class="py-10">
+    <header>
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold leading-tight tracking-tight text-gray-900">Favourites</h1>
+      </div>
+    </header>
+  </div>
+  
+  <div class="mx-auto max-w-2xl px-4 py-3 sm:px-6 sm:py-3 lg:max-w-7xl lg:px-8">
+  {% if favourites %}
+      <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+          {% for property in favourites %}
+          <div class="group relative">
+            <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+              {% if property.images %}
+                <img src="{{ property.images.url }}" alt="Front of men&#039;s Basic Tee in black." class="h-full w-full object-cover object-center lg:h-full lg:w-full">
+              {% else %}
+                <img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/1e/1e/dc/small-room.jpg?w=400&h=-1&s=1" alt="Front of men&#039;s Basic Tee in black." class="h-full w-full object-cover object-center lg:h-full lg:w-full">
+              {% endif %}
+              </div>
+
+              
+            <div class="mt-4 flex justify-between">
+                <div>
+                    <h3 class="text-sm text-gray-700">
+                        <a href="{% url 'property' pk=property.pk %}">{{ property.town|title }}</a>
+                        
+                    </h3>
+                    
+                    <p class="mt-1 text-sm text-gray-500">{{ property.address }}</p>
+                    <p class="text-sm font-medium text-gray-900">{{ property.price_per_month }}</p>
+                </div>
+            </div>
+          </div>
+          {% endfor %}
+  {% else %}
+  <h2> No offerings </h2>
+  {% endif %}
+  </div>
+<br>
+{% if favourites %}
+  <nav class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6" aria-label="Pagination">
+  
+    <p class="text-sm text-gray-700">
+      Showing
+      <span class="font-medium">{{ page_obj.number }}</span>
+      of
+      <span class="font-medium">{{ page_obj.paginator.num_pages }}</span>
+      pages
+    </p>
+
+    <div class="flex flex-1 justify-between sm:justify-end">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Previous</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Next</a>
+      {% endif %}
+      </div>
+  </nav>
+{% endif %}
+
+  
+
+</div>
+{% endblock %}
