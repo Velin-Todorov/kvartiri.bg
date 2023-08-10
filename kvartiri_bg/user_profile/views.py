@@ -168,7 +168,7 @@ class ChangePasswordView(SuccessMixin, PasswordChangeView):
     """
     Handles password change.
     """
-    template_name = 'change_password.html'
+    template_name = 'auth_templates/change_password.html'
 
 
 class FavouritesView(GetContextBasedOnType, ListView):

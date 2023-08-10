@@ -12,8 +12,8 @@ urlpatterns = [
     path('finish_profile', login_required(CreateProfileView.as_view(), login_url='login'), name='finish_profile'),
     path('logout', login_required(LogoutUserView.as_view()), name='logout'),
     path('activate/<str:uidb64>/<str:token>/', login_required(ActivateView.as_view()), name='activate'),
-    path('password-reset/', PasswordResetView.as_view(template_name='password_reset.html'),name='password-reset'),
-    path('password-reset/done/', PasswordResetDoneView.as_view(template_name='password_reset_done.html'),name='password_reset_done'),
-    path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html'),name='password_reset_confirm'),
-    path('password-reset-complete/',PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'),name='password_reset_complete')
+    path('password-reset/', PasswordResetView.as_view(template_name='auth_templates/password_reset.html', html_email_template_name='auth_templates/password_reset_email.html'),name='password-reset'),
+    path('password-reset/done/', PasswordResetDoneView.as_view(template_name='auth_templates/reset_password_done.html'),name='password_reset_done'),
+    path('password-reset-confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(template_name='auth_templates/password_reset_confirm.html'),name='password_reset_confirm'),
+    path('password-reset-complete/',PasswordResetCompleteView.as_view(template_name='auth_templates/password_reset_complete.html'),name='password_reset_complete')
 ]

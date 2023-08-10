@@ -23,7 +23,7 @@ class RegisterUserView(FormView):
     Registers a User
     """
     form_class = RegistrationForm
-    template_name = 'registration.html'
+    template_name = 'auth_templates/registration.html'
 
     def form_valid(self, form):
         email = form.cleaned_data['email']
@@ -51,7 +51,7 @@ class RegisterUserView(FormView):
     
 
 class LoginUserView(FormView):
-    template_name = 'login.html'
+    template_name = 'auth_templates/login.html'
     form_class = LoginUserForm
     
 
@@ -129,7 +129,7 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
     Creates a tenant profile
     """
     form_class = CreateProfileForm
-    template_name = 'create_profile.html'
+    template_name = 'profile_templates/create_profile.html'
 
     def form_valid(self, form):
         user = User.objects.filter(type='TENANT').last()
@@ -171,7 +171,7 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
 
 class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
     form_class = CreateLandlordProfileForm
-    template_name = 'create_profile.html'
+    template_name = 'profile_templates/create_profile.html'
 
     def form_valid(self, form):
         user = User.objects.filter(type='LANDLORD').last()
