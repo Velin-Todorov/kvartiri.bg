@@ -29,7 +29,7 @@ class RegisterUserView(FormView):
         email = form.cleaned_data['email']
         password = form.cleaned_data['password1']
         type = form.cleaned_data['type']
-
+                
         user = User(
             email=email, 
             password=make_password(password),
@@ -64,6 +64,7 @@ class LoginUserView(FormView):
             login(self.request, user)
             if user.profile_finished:
                 if user.type == 'TENANT':
+                    print('Tenant')
                     tenant = Profile.objects.get(user_id=user.pk)
                     return redirect(reverse('profile', kwargs={'pk': tenant.pk}))
                 else:
@@ -81,6 +82,7 @@ class LoginUserView(FormView):
 
 
     def form_invalid(self, form) -> HttpResponse:
+        print(self.request.user.type)
         return super().form_invalid(form)
     
     def get_success_url(self) -> str:
