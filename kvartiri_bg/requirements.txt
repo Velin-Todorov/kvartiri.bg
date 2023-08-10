@@ -15,6 +15,7 @@ django-browser-reload==1.11.0
 django-environ==0.10.0
 django-filter==23.2
 django-model-utils==4.3.1
+django-postman==4.3.2
 django-redis==5.3.0
 django-select2==8.1.2
 django-taggit==3.0.0
