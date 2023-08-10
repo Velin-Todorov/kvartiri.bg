@@ -1,0 +1,125 @@
+{% extends 'profile_page.html' %}
+
+{% block main %}
+
+<div class="h-full">
+  <div class="py-10">
+    <header>
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold leading-tight tracking-tight text-gray-900">Messages</h1>
+      </div>
+    </header>
+  </div>
+
+  <main>
+    <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+    {% if messages %}
+    <div class="px-4 sm:px-6 lg:px-8">
+        <div class="sm:flex sm:items-center">
+          <div class="sm:flex-auto">
+            <h2 class="mt-2 text-lg text-gray-700">A list of all the messages you have sent to and received from property owners</h2>
+          </div>
+        
+        </div>
+        <div class="mt-8 flow-root">
+          <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              <table class="min-w-full divide-y divide-gray-300">
+                <thead>
+                  <tr>
+                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">From</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">To</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Message</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Sent at/Received at</th>
+                    {% if message.sender.user.email == profile.user.email or message.sender.user.email == landlord.user.email %}
+                      <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Action</th>
+                    {% endif %}
+                  </tr>
+                </thead>
+                <tbody class="bg-white">
+                  {% for message in messages %}
+
+                    <tr class="even:bg-gray-50">
+                      {% if message.sender.user.email == profile.user.email or message.sender.user.email == landlord.user.email %}
+                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">You</td>
+                      {% else %}
+                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ message.sender.user.email }}</td>
+                      {% endif %}
+                      
+                      {% if message.recipient.user.email == landlord.user.email or message.recipient.user.email == profile.user.email %}
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">You</td>
+                      {% else %}
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ message.recipient.user.email }}</td>
+                      {% endif %}
+                      
+                      
+                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        <div class="mt-2">
+                          <textarea disabled rows="5" class="col-span-full whitespace-normal block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            {{ message.msg_content}}
+                          </textarea>
+                        </div>   
+                      </td>
+                      
+                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ message.created_at }}</td>
+                      {% if user.type == "LANDLORD" %}
+                        {% if message.sender_id != landlord.pk %}
+                          <td class="whitespace-normal text-left px-3 py-4 text-sm text-gray-500">
+                            <a href="{% url 'reply_message' pk=message.id %}" class="text-indigo-600 hover:text-indigo-900">Reply</a>
+                          </td>
+                        {% else %}
+                        <td class="whitespace-normal text-left px-3 py-4 text-sm text-gray-500">
+                        </td>
+                        {% endif %}
+                      {% elif user.type == 'TENANT' %}
+                          {% if message.sender_id != profile.pk %}
+                            <td class="whitespace-normal text-left px-3 py-4 text-sm text-gray-500">
+                              <a href="{% url 'reply_message' pk=message.id %}" class="text-indigo-600 hover:text-indigo-900">Reply</a>
+                            </td>
+                          {% else %}
+                            <td class="whitespace-normal text-left px-3 py-4 text-sm text-gray-500">
+                            </td>
+                          {% endif %}
+                      {% endif %}
+                      
+                    </tr>
+                  {% endfor %}
+                </tbody>
+                
+              </table>
+              <br>
+              <nav class="flex items-right justify-between border-t border-gray-200 bg-slate-300 px-4 py-3 sm:px-6" aria-label="Pagination">
+      
+                <p class="text-sm text-gray-700">
+                  Showing
+                  <span class="font-medium">{{ page_obj.number }}</span>
+                  of
+                  <span class="font-medium">{{ page_obj.paginator.num_pages }}</span>
+                  pages
+                </p>
+        
+                <div>
+                  {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Previous</a>
+                  {% endif %}
+                  {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0">Next</a>
+                  {% endif %}
+                  </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <br>
+
+    {% else %}
+    <h2>
+      You have no messages.
+    </h2>
+    {% endif %}
+  </main>
+
+{% endblock %}
