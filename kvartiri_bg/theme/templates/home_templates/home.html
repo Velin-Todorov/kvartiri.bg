@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
   {% block header %}
-  <header class="bg-white">
+  <header class="bg-blue-100">
     <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
       <div class="flex lg:flex-1">
         <a href="{% url 'home' %}" class="-m-1.5 p-1.5">
-          <span class="sr-only">Your Company</span>
+          <span class="sr-only">Kvartiri.bg</span>
           <img class="h-8 w-auto" src="https://static.vecteezy.com/system/resources/previews/006/309/677/original/creative-real-estate-logo-design-house-logo-design-real-estate-icon-free-vector.jpg" alt="">
         </a>
       </div>
 
       <div class="hidden lg:flex lg:gap-x-12">
         <a href="{% url 'all_properties' %}" class="text-sm font-semibold leading-6 text-gray-900">Find a room</a>
-        <a href="{% url 'rent_out' %}" class="text-sm font-semibold leading-6 text-gray-900">Rent out your place</a>
+        <a href="{% url 'how_does_it_work' %}" class="text-sm font-semibold leading-6 text-gray-900">Rent out your place</a>
         {% if user.is_authenticated %}
           {% if user.type == 'LANDLORD' %}
             {% if user.profile_finished %}
@@ -51,7 +51,7 @@
   {% endblock %}
 
   {% block main %}
-  <div class="bg-white">
+  <div>
     <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
       <h2 class="text-2xl font-bold tracking-tight text-gray-900">Recently added properties</h2>
       <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
@@ -170,9 +170,69 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+      <h2 class="text-2xl font-bold tracking-tight text-gray-900">Find properties in the most popular cities</h2>
+      <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+
+        <div class="group relative">
+          <a href="#">
+            <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+              <img src="https://thenomadvisor.com/wp-content/uploads/2019/02/wheretostayinsofia.jpg" alt="Sofia"
+                class="h-full w-full object-cover object-center lg:h-full lg:w-full">
+            </div>
+            <div class="mt-4 flex">
+                <p class="mt-1 text-lg text text-gray-500">Sofia</p>
+            </div>
+          </a>
+        </div>
+
+        <div class="group relative">
+          <a href="#">
+            <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+              <img src="https://www.chasingthedonkey.com/wp-content/uploads/2018/03/VARNA_CATHEDTRAL_shutterstock_511415530.jpg" alt="Varna"
+                class="h-full w-full object-cover object-center lg:h-full lg:w-full">
+            </div>
+            <div class="mt-4 flex">
+                <p class="mt-1 text-lg text text-gray-500">Varna</p>
+            </div>
+          </a>
+        </div>
+
+        <div class="group relative">
+          <a href="#">
+            <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+              <img src="https://scratchyourmapa.com/wp-content/uploads/2023/04/Plovdiv-city-center.jpg" alt="Plovdiv"
+                class="h-full w-full object-cover object-center lg:h-full lg:w-full">
+            </div>
+            <div class="mt-4 flex">
+                <p class="mt-1 text-lg text text-gray-500">Plovdiv</p>
+            </div>
+          </a>
+        </div>
+
+        <div class="group relative">
+          <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80 flex items-center justify-center">
+            Explore more offerings
+          </div>
+          <div class="mt-4 flex justify-between">
+            <div>
+              <h3 class="text-sm text-gray-200">
+                <a href="{% url "all_properties" %}">
+                  <span aria-hidden="true" class="absolute inset-0"></span>
+                </a>
+              </h3>
+            </div>
+          </div>
+        </div>
 
         <!-- More products... -->
       </div>
+    </div>
     </div>
   </div>
 
