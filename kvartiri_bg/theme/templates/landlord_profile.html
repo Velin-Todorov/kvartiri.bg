@@ -25,7 +25,7 @@
             <div class="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
               <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
               <a href="{% url 'landlord_profile' pk=landlord.pk %}" class="border-indigo-500 text-gray-900 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium" aria-current="page">Overview</a>
-              <a href="{% url 'landlord_messages' pk=landlord.pk %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium">Messages</a>
+              <a href="{% url 'messages' %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium">Messages</a>
               <a href="{% url 'landlord_offerings' pk=landlord.pk %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium">Listings</a>
               <a href="{% url 'edit_landlord' pk=landlord.pk %}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium">Edit Profile</a>
             </div>
@@ -103,7 +103,7 @@
                 </div>
                 <div class="sm:col-span-1">
                   <dt class="text-xl font-medium text-gray-500">Email</dt>
-                  <dd class="mt-1 text-lg text-gray-900">{{ landlord.user.email }}</dd>
+                  <dd class="mt-1 text-lg text-gray-900">{{ land.user.email }}</dd>
                 </div>
 
                 <div class="sm:col-span-1">

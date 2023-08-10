@@ -58,10 +58,11 @@
             </div>
           </div>
           <div>
+            Register as:
             {% for b in form.type %}
                 <div class="flex items-center">
                   {{ b.tag }}
-                  <label for="{{ b.id_choice_label }}" class="ml-3 block text-sm font-medium leading-6 text-gray-900">{{ b.choice_label }}</label>
+                  <label for="{{ b.id_choice_label }}" class="ml-3 block text-sm font-medium leading-6 text-gray-900">{{ b.choice_label|title }}</label>
                 </div>
             {% endfor %}
           </div>

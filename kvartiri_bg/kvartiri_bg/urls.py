@@ -26,7 +26,7 @@ urlpatterns = [
     path('', include('home_view.urls')),
     path('auth/', include('auth_views.urls')),
     path('', include('user_profile.urls')),
-    path('landlord/', include('properties.urls'))
+    path('', include('properties.urls'))
 
 ]
 

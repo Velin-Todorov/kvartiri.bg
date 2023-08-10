@@ -14,13 +14,22 @@
         <a href="{% url 'all_properties' %}" class="text-sm font-semibold leading-6 text-gray-900">Find a room</a>
         <a href="{% url 'rent_out' %}" class="text-sm font-semibold leading-6 text-gray-900">Rent out your place</a>
         {% if user.is_authenticated %}
-          {% if profile %}
-            {% if user.type == 'LANDLORD' %}
-              <a href="{% url 'landlord_profile' pk=profile.pk %}" class="text-sm font-semibold leading-6 text-gray-900">My Profile</a>
+          {% if user.type == 'LANDLORD' %}
+            {% if user.profile_finished %}
+              <a href="{% url 'landlord_profile' pk=landlord.pk %}" class="text-sm font-semibold leading-6 text-gray-900">My Profile</a>
             {% else %}
-              <a href="{% url 'profile' pk=profile.pk %}" class="text-sm font-semibold leading-6 text-gray-900">My Profile</a>
+              <a href="{% url 'finish_landlord_profile' %}" class="text-sm font-semibold leading-6 text-gray-900">Finish your profile</a>
             {% endif %}
+          
+          {% else %}
+            {% if user.profile_finished %}
+                <a href="{% url 'profile' pk=profile.pk %}" class="text-sm font-semibold leading-6 text-gray-900">My Profile</a>
+            {% else %}
+              <a href="{% url 'finish_profile' %}" class="text-sm font-semibold leading-6 text-gray-900">Finish your profile</a>
+            {% endif %}
+
           {% endif %}
+
         {% else %}
             <a href="{% url 'register' %}" class="text-sm font-semibold leading-6 text-gray-900">Register</a>
         {% endif %}
