@@ -171,7 +171,7 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
 
 class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
     form_class = CreateLandlordProfileForm
-    template_name = 'create_landlord_profile.html'
+    template_name = 'create_profile.html'
 
     def form_valid(self, form):
         user = User.objects.filter(type='LANDLORD').last()

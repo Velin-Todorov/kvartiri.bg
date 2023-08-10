@@ -18,7 +18,7 @@ class CreateProperty(FormView):
     """
     model = Property
     form_class = CreateProperty
-    template_name = 'create_property.html'
+    template_name = 'property_templates/create_property.html'
 
     def form_valid(self, form):
 
@@ -81,7 +81,7 @@ class EditProperty(UpdateView):
         'furnished',
         'utilities_included'
     ]
-    template_name = 'edit_property.html'
+    template_name = 'property_templates/edit_property.html'
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context =  super().get_context_data(**kwargs)
@@ -107,7 +107,7 @@ class DeleteProperty(DeleteView):
 
 class PropertyView(DetailView):
     model = Property
-    template_name = 'property_details.html'
+    template_name = 'property_templates/property_details.html'
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -137,7 +137,7 @@ class ReactToProperty(FormView):
 
     model= Property
     form_class = ReactionForm
-    template_name = 'react_to_property.html'
+    template_name = 'property_templates/react_to_property.html'
     fields = ['msg_content']
     success_url = reverse_lazy('messages')
 
