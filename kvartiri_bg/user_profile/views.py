@@ -1,14 +1,20 @@
 from typing import Any, Dict
-from django.views.generic import DetailView, UpdateView, DeleteView, ListView
+from django.db.models.query import QuerySet
+from django.views.generic import DetailView, UpdateView, DeleteView, ListView, FormView, TemplateView
 from django.contrib.auth.views import PasswordChangeView
 from auth_views.models import *
-from .forms import *
+from properties.forms import ReactionForm
+from django.http import HttpResponse, HttpResponseRedirect
 from properties.models import Property
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from auth_views.forms import CreateLandlordProfileForm, CreateProfileForm
 from .mixins import UserContextMixin, SuccessMixin
 from properties.models import Property
+from properties.models import MessageFromLandlord, MessageFromTenant, Favourite
+import re
+from itertools import chain
+
 
 
 def create_profile_update_view(model_class, form_klass, template):
@@ -59,20 +65,123 @@ class LandlordProfileView(UserContextMixin, DetailView):
     context_object_name = 'landlord'
     template_name = 'landlord_profile.html'
     
-
-
-class MessagesView(DetailView):
+ 
+class MessagesView(ListView):
     """
     User's messages - sent and received
     """
-    pass
+    template_name = 'my_messages.html'
+    context_object_name = 'messages'
+    paginate_by = 6
+    
+
+    def get_queryset(self) -> QuerySet[Any]:
+
+        if self.request.user.type == 'TENANT':
+            sent = MessageFromLandlord.objects.filter(recipient_id=Profile.objects.get(user_id=self.request.user.id).pk)
+            received = MessageFromTenant.objects.filter(sender_id=Profile.objects.get(user_id=self.request.user.id).pk)
+        else:
+            sent = MessageFromLandlord.objects.filter(sender_id=LandlordProfile.objects.get(user_id=self.request.user.id).pk)
+            received = MessageFromTenant.objects.filter(recipient_id=LandlordProfile.objects.get(user_id=self.request.user.id).pk)
+
+   
+        all_messages = list(chain(sent, received))
+        return all_messages[::-1]
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+
+        if self.request.user.type == 'TENANT':
+            profile = Profile.objects.get(user_id= self.request.user.pk)
+            context['profile'] = profile
+           
+
+        elif self.request.user.type == 'LANDLORD':
+            landlord = LandlordProfile.objects.get(user_id= self.request.user.pk)
+            context['landlord'] = landlord
+            
+        context['user'] = self.request.user
+
+        return context
+
+class ReplyMessage(FormView):
+    """
+    Handles replies to messages
+    """
+    template_name = 'reply.html'
+    form_class = ReactionForm
+    context_object_name = 'messages'
+    success_url = reverse_lazy('messages')
 
 
-class LandlordMessages(DetailView):
-    """
-    Landlord Messages
-    """
-    pass
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        regex = re.compile('\d+$')
+        message_id = regex.search(self.request.path).group(0)
+
+        sender = None
+        recipient = None
+        
+        if self.request.user.type == 'LANDLORD':
+            message = MessageFromTenant.objects.get(pk=message_id)
+            sender  = User.objects.get(pk=Profile.objects.get(pk=message.sender_id).user_id).email
+            recipient = User.objects.get(pk=LandlordProfile.objects.get(pk=message.recipient_id).user_id).email
+
+        else:
+            print('user is of type TENANT')
+            message =  MessageFromLandlord.objects.get(pk=message_id)  
+            sender  = User.objects.get(pk=LandlordProfile.objects.get(pk=message.sender_id).user_id).email
+            recipient = User.objects.get(pk=Profile.objects.get(pk=message.recipient_id).user_id).email 
+
+        sender, recipient = recipient, sender
+        context['sender'] = sender
+        context['recipient'] = recipient
+
+        return context 
+
+    def form_valid(self, form):
+        regex = re.compile('\d+$')
+        message_id = regex.search(self.request.path).group(0)
+        
+        if self.request.user.type == 'LANDLORD':
+            message =  MessageFromTenant.objects.get(pk=message_id)
+            sender = LandlordProfile.objects.get(pk=message.recipient_id)
+            recipient  = Profile.objects.get(pk=message.sender_id)
+
+        else:
+            message = MessageFromLandlord.objects.get(pk=message_id)
+            sender = Profile.objects.get(pk=message.recipient_id)
+            recipient  = LandlordProfile.objects.get(pk=message.sender_id)
+            
+            
+
+        property = Property.objects.get(pk=message.property_id)
+        msg_content = form.cleaned_data['msg_content']
+
+
+        if self.request.user.type == 'LANDLORD':
+            new_message = MessageFromLandlord(
+                sender = sender,
+                recipient=recipient,
+                msg_content = msg_content,
+                property = property
+            )
+
+        else:
+            new_message = MessageFromTenant(
+                sender = sender,
+                recipient = recipient,
+                msg_content = msg_content,
+                property = property
+            )
+
+
+        new_message.save()
+        return super().form_valid(form)
+
+    def form_invalid(self, form: Any) -> HttpResponse:
+        print(form.errors)
+        return super().form_invalid(form)
 
 
 class ChangePasswordView(SuccessMixin, PasswordChangeView):
@@ -82,11 +191,36 @@ class ChangePasswordView(SuccessMixin, PasswordChangeView):
     template_name = 'change_password.html'
 
 
-class FavouritesView(DetailView):
+class FavouritesView(ListView):
     """
-    View that displays user's favourite properties
+    View that displays tenant's favourite properties
     """
-    pass
+    model = Favourite
+    template_name = 'favourite_properties.html'
+    context_object_name = 'favourites'
+    paginate_by = 9
+
+    def get_queryset(self) -> QuerySet[Any]:
+        profile = Profile.objects.get(user_id=self.request.user.id)
+        favourite = Favourite.objects.get(profile=profile)
+        return favourite.property.all()
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+
+        if self.request.user.type == 'TENANT':
+            profile = Profile.objects.get(user_id= self.request.user.pk)
+            context['profile'] = profile
+           
+
+        elif self.request.user.type == 'LANDLORD':
+            landlord = LandlordProfile.objects.get(user_id= self.request.user.pk)
+            context['landlord'] = landlord
+            
+        context['user'] = self.request.user
+
+        return context
+
 
 class LandlordOfferings(ListView):
     """
