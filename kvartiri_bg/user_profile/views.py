@@ -9,19 +9,20 @@ from properties.models import Property
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from auth_views.forms import CreateLandlordProfileForm, CreateProfileForm
-from .mixins import UserContextMixin, SuccessMixin
+from mixins import UserContextMixin, SuccessMixin
 from properties.models import Property
 from properties.models import MessageFromLandlord, MessageFromTenant, Favourite
 import re
 from itertools import chain
+from mixins import GetContextBasedOnType
 
 
 
-def create_profile_update_view(model_class, form_klass, template):
+def create_profile_update_view(model_class, form_klass):
     class UpdateViewClass(UserContextMixin, SuccessMixin, UpdateView):
         model = model_class
         form_class = form_klass
-        template_name = template
+        template_name = 'profile_templates/edit_profile.html'
     
     return UpdateViewClass
 
@@ -29,7 +30,7 @@ def create_delete_profile_view(model_class):
     class DeleteProfile(DeleteView):
         model = model_class
         success_url = reverse_lazy('login')
-        template_name = 'confirm_delete.html'
+        template_name = 'profile_templates/confirm_delete.html'
 
 
         def form_valid(self, form):
@@ -52,25 +53,21 @@ def create_delete_profile_view(model_class):
 
     return DeleteProfile
 
-# Create your views here.
-class ProfileView(UserContextMixin, DetailView):
-    model = Profile
-    context_object_name = 'profile'
-    template_name = 'profile_page.html'
+def create_profile_view(model_class, context_object):
+    class ProfileView(UserContextMixin, DetailView):
+        model = model_class
+        context_object_name = context_object
+        template_name = 'profile_templates/profile_page.html'
+
+    return ProfileView
 
 
-
-class LandlordProfileView(UserContextMixin, DetailView):
-    model = LandlordProfile
-    context_object_name = 'landlord'
-    template_name = 'landlord_profile.html'
-    
  
-class MessagesView(ListView):
+class MessagesView(GetContextBasedOnType, ListView):
     """
     User's messages - sent and received
     """
-    template_name = 'my_messages.html'
+    template_name = 'profile_templates/my_messages.html'
     context_object_name = 'messages'
     paginate_by = 6
     
@@ -88,27 +85,11 @@ class MessagesView(ListView):
         all_messages = list(chain(sent, received))
         return all_messages[::-1]
 
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-
-        if self.request.user.type == 'TENANT':
-            profile = Profile.objects.get(user_id= self.request.user.pk)
-            context['profile'] = profile
-           
-
-        elif self.request.user.type == 'LANDLORD':
-            landlord = LandlordProfile.objects.get(user_id= self.request.user.pk)
-            context['landlord'] = landlord
-            
-        context['user'] = self.request.user
-
-        return context
-
 class ReplyMessage(FormView):
     """
     Handles replies to messages
     """
-    template_name = 'reply.html'
+    template_name = 'profile_templates/reply.html'
     form_class = ReactionForm
     context_object_name = 'messages'
     success_url = reverse_lazy('messages')
@@ -128,7 +109,6 @@ class ReplyMessage(FormView):
             recipient = User.objects.get(pk=LandlordProfile.objects.get(pk=message.recipient_id).user_id).email
 
         else:
-            print('user is of type TENANT')
             message =  MessageFromLandlord.objects.get(pk=message_id)  
             sender  = User.objects.get(pk=LandlordProfile.objects.get(pk=message.sender_id).user_id).email
             recipient = User.objects.get(pk=Profile.objects.get(pk=message.recipient_id).user_id).email 
@@ -191,36 +171,23 @@ class ChangePasswordView(SuccessMixin, PasswordChangeView):
     template_name = 'change_password.html'
 
 
-class FavouritesView(ListView):
+class FavouritesView(GetContextBasedOnType, ListView):
     """
     View that displays tenant's favourite properties
     """
     model = Favourite
-    template_name = 'favourite_properties.html'
+    template_name = 'profile_templates/favourite_properties.html'
     context_object_name = 'favourites'
     paginate_by = 9
 
     def get_queryset(self) -> QuerySet[Any]:
         profile = Profile.objects.get(user_id=self.request.user.id)
-        favourite = Favourite.objects.get(profile=profile)
-        return favourite.property.all()
-
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-
-        if self.request.user.type == 'TENANT':
-            profile = Profile.objects.get(user_id= self.request.user.pk)
-            context['profile'] = profile
-           
-
-        elif self.request.user.type == 'LANDLORD':
-            landlord = LandlordProfile.objects.get(user_id= self.request.user.pk)
-            context['landlord'] = landlord
-            
-        context['user'] = self.request.user
-
-        return context
-
+        try:
+            favourite = Favourite.objects.get(profile=profile)
+        except self.model.DoesNotExist:
+            favourite = []
+        
+        return favourite
 
 class LandlordOfferings(ListView):
     """
@@ -228,7 +195,7 @@ class LandlordOfferings(ListView):
     """
     model = Property
     paginate_by = 10
-    template_name = 'landlord_properties.html'
+    template_name = 'profile_templates/landlord_properties.html'
     context_object_name = 'properties'
 
     def get_queryset(self):
@@ -240,9 +207,10 @@ class LandlordOfferings(ListView):
         return context
     
 
-EditTenantProfile = create_profile_update_view(Profile, CreateProfileForm, 'edit_profile.html') 
-EditLandlordProfile = create_profile_update_view(LandlordProfile, CreateLandlordProfileForm, 'edit_profile.html')
+EditTenantProfile = create_profile_update_view(Profile, CreateProfileForm) 
+EditLandlordProfile = create_profile_update_view(LandlordProfile, CreateLandlordProfileForm)
 DeleteTenantProfile = create_delete_profile_view(Profile)
 DeleteLandlordProfile = create_delete_profile_view(LandlordProfile)
-
+LandlordProfileView = create_profile_view(LandlordProfile, 'landlord')
+ProfileView = create_profile_view(Profile, 'profile')
 
