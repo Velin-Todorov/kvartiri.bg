@@ -18,6 +18,7 @@ from mixins import GetContextBasedOnType
 
 
 
+
 def create_profile_update_view(model_class, form_klass):
     class UpdateViewClass(UserContextMixin, SuccessMixin, UpdateView):
         model = model_class
@@ -180,13 +181,15 @@ class FavouritesView(GetContextBasedOnType, ListView):
     context_object_name = 'favourites'
     paginate_by = 9
 
-    def get_queryset(self) -> QuerySet[Any]:
+    def get_queryset(self):
         profile = Profile.objects.get(user_id=self.request.user.id)
+
         try:
-            favourite = Favourite.objects.get(profile=profile)
+            favourite = Favourite.objects.all().filter(profile=profile)[0]
+            favourite = favourite.property.all()
         except self.model.DoesNotExist:
-            favourite = []
-        
+            favourite = QuerySet(None)
+    
         return favourite
 
 class LandlordOfferings(ListView):

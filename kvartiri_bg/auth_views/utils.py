@@ -14,7 +14,7 @@ from .tokens import account_activation_token
 def activateEmail(request, user):
         mail_subject = 'Activate your user account'
         message = render_to_string(
-            'email_activate_acc.html',
+            'auth_templates/email_activate_acc.html',
             {
                 'user': user.email,
                 'domain': f'{request.get_host()}',

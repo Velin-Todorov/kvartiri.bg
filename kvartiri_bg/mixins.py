@@ -8,11 +8,10 @@ class GetContextBasedOnType:
         context['user'] = self.request.user
 
         if self.request.user.is_authenticated:
-            if self.request.user.profile_finished:
-                if self.request.user.type == 'LANDLORD':
-                    context['landlord'] = LandlordProfile.objects.get(user_id=self.request.user.pk)
-                else:
-                    context['profile'] = Profile.objects.get(user_id=self.request.user.pk)
+            if self.request.user.type == 'LANDLORD':
+                context['landlord'] = LandlordProfile.objects.get(user_id=self.request.user.pk)
+            else:
+                context['profile'] = Profile.objects.get(user_id=self.request.user.pk)
 
         return context
 

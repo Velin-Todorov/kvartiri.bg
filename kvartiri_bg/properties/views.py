@@ -117,13 +117,16 @@ class PropertyView(DetailView):
             if self.request.user.type == 'TENANT':
                 profile = Profile.objects.get(user_id=self.request.user.pk)
                 context['profile'] = profile
-                favourites = Favourite.objects.get(profile=profile)
-                context['favourites'] = favourites.property.all()
+                favourites = Favourite.objects.all()
 
-        lanlord = LandlordProfile.objects.get(pk=self.get_object().landlord_id)
+                if favourites:
+                    favourites = favourites.get(profile=profile)
+                    context['favourites'] = favourites.property.all()
+
+        landlord = LandlordProfile.objects.get(pk=self.get_object().landlord_id)
         pictures = Picture.objects.filter(property_id=self.get_object().pk)
         user = self.request.user
-        context['landlord'] = lanlord
+        context['landlord'] = landlord
         context['user'] = user
         context['created'] = created
         context['pictures'] = pictures
