@@ -3,6 +3,7 @@ from .constants import CHOICES, PRICE_RANGE, TYPE, PROFILE_TYPE, OCCUPATION
 from django.contrib.auth.models import AbstractUser, PermissionsMixin, BaseUserManager, UserManager
 from datetime import datetime
 from properties.consts import bulgarian_cities
+from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 
@@ -18,6 +19,7 @@ class CustomUserManager(UserManager):
             email=self.normalize_email(email)
         )
 
+        password = make_password(password) 
         user.set_password(password) #make password
         user.is_superuser = True
         user.is_staff = True
