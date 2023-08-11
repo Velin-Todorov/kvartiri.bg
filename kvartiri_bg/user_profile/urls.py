@@ -12,10 +12,10 @@ urlpatterns = [
     path('landlord-profile/<int:pk>/offerings', login_required(LandlordOfferings.as_view(), login_url=reverse_lazy('login')), name='landlord_offerings'),
     path('landlord-profile/<int:pk>/edit_profile', login_required(EditLandlordProfile.as_view(), login_url=reverse_lazy('login')), name='edit_landlord'),
 
-    path('delete_tenant/<int:pk>', login_required(DeleteTenantProfile.as_view(), login_url='login'), name='delete_tenant'),
-    path('delete_landlord/<int:pk>', login_required(DeleteLandlordProfile.as_view(), login_url='login'), name='delete_landlord'),
-    path('change_password', login_required(ChangePasswordView.as_view(), login_url='login'), name='change_password'),
+    path('delete_tenant/<int:pk>', login_required(DeleteTenantProfile.as_view(), login_url=reverse_lazy('login')), name='delete_tenant'),
+    path('delete_landlord/<int:pk>', login_required(DeleteLandlordProfile.as_view(), login_url=reverse_lazy('login')), name='delete_landlord'),
+    path('change_password', login_required(ChangePasswordView.as_view(), login_url=reverse_lazy('login')), name='change_password'),
 
-    path('messages', MessagesView.as_view(), name='messages'),
-    path('reply/message/<int:pk>', ReplyMessage.as_view(), name="reply_message")
+    path('messages', login_required(MessagesView.as_view(), login_url=reverse_lazy('login')), name='messages'),
+    path('reply/message/<int:pk>', login_required(ReplyMessage.as_view(), login_url=reverse_lazy('login')), name="reply_message")
 ]
