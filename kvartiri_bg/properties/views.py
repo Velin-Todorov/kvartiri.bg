@@ -10,8 +10,8 @@ from django.urls import reverse_lazy
 from auth_views.models import LandlordProfile, Profile, User
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import Group, User, Permission
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from auth_views.models import User
 from mixins import LandlordOnlyMixin, TenantOnlyMixin
 # Create your views here.
 
