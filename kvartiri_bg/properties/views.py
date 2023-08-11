@@ -9,14 +9,18 @@ import re
 from django.urls import reverse_lazy
 from auth_views.models import LandlordProfile, Profile, User
 from django.shortcuts import get_object_or_404
-
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Group, User, Permission
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from mixins import LandlordOnlyMixin, TenantOnlyMixin
 # Create your views here.
 
-class CreateProperty(FormView):
+class CreateProperty(LandlordOnlyMixin, FormView):
     """
     Handles new property creation
     """
     model = Property
+    permission_required = 'properties.add_property'
     form_class = CreateProperty
     template_name = 'property_templates/create_property.html'
 
@@ -65,10 +69,11 @@ class CreateProperty(FormView):
         return reverse('landlord_offerings', kwargs={'pk':user})
 
 
-class EditProperty(UpdateView):
+class EditProperty(LandlordOnlyMixin, UpdateView):
     """
     Handles existing property editing
     """
+
     model = Property
     fields = [
         'type',
@@ -92,10 +97,11 @@ class EditProperty(UpdateView):
         user = LandlordProfile.objects.get(user_id = self.request.user.pk).pk
         return reverse('landlord_offerings', kwargs={'pk':user})
 
-class DeleteProperty(DeleteView):
+class DeleteProperty(LandlordOnlyMixin, DeleteView):
     """
     Handles property deletion
     """
+
     model = Property
     template_name = 'confirm_delete.html'
 
@@ -136,7 +142,7 @@ class PropertyView(DetailView):
         return context
 
 
-class ReactToProperty(FormView):
+class ReactToProperty(TenantOnlyMixin, FormView):
     """
     Handles reactions on tenant side.
     """

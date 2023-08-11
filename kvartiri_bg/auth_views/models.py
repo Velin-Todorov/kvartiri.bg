@@ -52,7 +52,7 @@ class LandlordProfile(models.Model):
     profile_finished = models.BooleanField(default=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=False)
     phone_number = models.IntegerField(blank=True, null=True)
-    profile_picture = models.ImageField(default='default.jpg', upload_to='profile_pics/')
+    profile_picture = models.ImageField(default='profile_pics/default.jpg', upload_to='profile_pics/')
     type = models.CharField(choices=TYPE, max_length=15, default=TYPE[0][0])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -79,7 +79,7 @@ class Profile(models.Model):
     budget = models.CharField(choices=PRICE_RANGE, max_length=18, blank=False, null=True, default=PRICE_RANGE[0][0])
     current_occupation = models.CharField(choices=OCCUPATION, max_length=15, default=OCCUPATION[0][0])
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=False)
-    profile_picture = models.ImageField(default='default.jpg', upload_to='profile_pics/')
+    profile_picture = models.ImageField(default='profile_pics/default.jpg', upload_to='profile_pics/')
 
     USERNAME_FIELD = 'email'
 

@@ -1,6 +1,6 @@
 from django.http import HttpResponse
-from django.views.generic.edit import FormView, DeleteView
-from django.urls import reverse_lazy, reverse
+from django.views.generic.edit import FormView
+from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.views.generic import View
@@ -13,7 +13,17 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
 from .tokens import account_activation_token
 from .utils import *
+from django.contrib.auth.models import Group
+from mixins import TenantOnlyMixin, LandlordOnlyMixin
 # Create your views here
+
+landlord_group, created = Group.objects.get_or_create(name='Landlord')
+tenant_group, created = Group.objects.get_or_create(name='Tenants')
+
+
+
+landlord_group.save()
+tenant_group.save()
 
 User = get_user_model()
 
@@ -40,9 +50,11 @@ class RegisterUserView(FormView):
 
         login(self.request, user)
         if type == 'LANDLORD':
+            user.groups.add(landlord_group)
             return redirect('finish_landlord_profile')
 
         elif type == 'TENANT':
+            user.groups.add(tenant_group)
             return redirect('finish_profile') 
 
 
@@ -64,7 +76,6 @@ class LoginUserView(FormView):
             login(self.request, user)
             if user.profile_finished:
                 if user.type == 'TENANT':
-                    print('Tenant')
                     tenant = Profile.objects.get(user_id=user.pk)
                     return redirect(reverse('profile', kwargs={'pk': tenant.pk}))
                 else:
@@ -124,7 +135,7 @@ class ActivateView(View):
 
 
 
-class CreateProfileView(FormView, PermissionRequiredMixin):
+class CreateProfileView(TenantOnlyMixin, FormView):
     """
     Creates a tenant profile
     """
@@ -142,7 +153,7 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
         profile_picture = form.cleaned_data['profile_picture']
         phone_number = form.cleaned_data['phone_number']
         
-        Profile.objects.create(
+        profile = Profile.objects.create(
             first_name = first_name,
             last_name = last_name,
             looking_for=looking_for,
@@ -154,6 +165,7 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
             user_id = user.pk
         )
 
+        profile.save()
         user.profile_finished = True
         user.save()
         return super().form_valid(form)  
@@ -169,7 +181,7 @@ class CreateProfileView(FormView, PermissionRequiredMixin):
         return reverse('profile', kwargs={'pk':user})
 
 
-class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
+class CreateLandlordProfileView(LandlordOnlyMixin, FormView):
     form_class = CreateLandlordProfileForm
     template_name = 'profile_templates/create_profile.html'
 
@@ -184,7 +196,7 @@ class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
         profile_picture = form.cleaned_data['profile_picture']
         phone_number = form.cleaned_data['phone_number']
 
-        LandlordProfile.objects.create(
+        landlord = LandlordProfile.objects.create(
             first_name = first_name,
             last_name = last_name,
             about=about,
@@ -195,6 +207,8 @@ class CreateLandlordProfileView(FormView, PermissionRequiredMixin):
             profile_finished = True,
             user_id = user.pk
         )
+
+        landlord.save()
         user.profile_finished = True
         user.save()
         return super().form_valid(form)  

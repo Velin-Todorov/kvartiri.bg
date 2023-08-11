@@ -3,6 +3,7 @@ from auth_views.models import LandlordProfile, Profile
 from django.urls import reverse
 from django.http import HttpResponseForbidden
 from django.utils.decorators import method_decorator
+from functools import wraps
 
 class GetContextBasedOnType:
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
@@ -34,18 +35,20 @@ class SuccessMixin:
 
 
 def tenant_required(view_func):
-    def _wrapped_view(self, request, *args, **kwargs):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
         if request.user.is_authenticated and request.user.type == 'TENANT':
-            return view_func(self, request, *args, **kwargs)
+            return view_func(request, *args, **kwargs)
         else:
             return HttpResponseForbidden('You cannot access this page!')
     
     return _wrapped_view
 
 def landlord_required(view_func):
-    def _wrapped_view(self, request, *args, **kwargs):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
         if request.user.is_authenticated and request.user.type == 'LANDLORD':
-            return view_func(self, request, *args, **kwargs)
+            return view_func(request, *args, **kwargs)
         else:
             return HttpResponseForbidden('You cannot access this page!')
     
@@ -54,10 +57,13 @@ def landlord_required(view_func):
 
 class TenantOnlyMixin:
     @method_decorator(tenant_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+
     
 class LandlordOnlyMixin:
     @method_decorator(landlord_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+

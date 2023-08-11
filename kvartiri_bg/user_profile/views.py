@@ -14,21 +14,21 @@ from properties.models import Property
 from properties.models import MessageFromLandlord, MessageFromTenant, Favourite
 import re
 from itertools import chain
-from mixins import GetContextBasedOnType
+from mixins import GetContextBasedOnType, TenantOnlyMixin, LandlordOnlyMixin
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
-
-
-def create_profile_update_view(model_class, form_klass):
-    class UpdateViewClass(UserContextMixin, SuccessMixin, UpdateView):
+def create_profile_update_view(model_class, form_klass, custom_mixin):
+    class UpdateViewClass(custom_mixin, UserContextMixin, SuccessMixin, UpdateView):
         model = model_class
         form_class = form_klass
         template_name = 'profile_templates/edit_profile.html'
     
     return UpdateViewClass
 
-def create_delete_profile_view(model_class):
-    class DeleteProfile(DeleteView):
+def create_delete_profile_view(model_class, custom_mixin):
+    class DeleteProfile(custom_mixin, DeleteView):
         model = model_class
         success_url = reverse_lazy('login')
         template_name = 'profile_templates/confirm_delete.html'
@@ -54,8 +54,8 @@ def create_delete_profile_view(model_class):
 
     return DeleteProfile
 
-def create_profile_view(model_class, context_object):
-    class ProfileView(UserContextMixin, DetailView):
+def create_profile_view(model_class, context_object, custom_mixin):
+    class ProfileView(custom_mixin, GetContextBasedOnType, UserContextMixin, DetailView):
         model = model_class
         context_object_name = context_object
         template_name = 'profile_templates/profile_page.html'
@@ -172,7 +172,7 @@ class ChangePasswordView(SuccessMixin, PasswordChangeView):
     template_name = 'auth_templates/change_password.html'
 
 
-class FavouritesView(GetContextBasedOnType, ListView):
+class FavouritesView(TenantOnlyMixin, GetContextBasedOnType, ListView):
     """
     View that displays tenant's favourite properties
     """
@@ -185,14 +185,15 @@ class FavouritesView(GetContextBasedOnType, ListView):
         profile = Profile.objects.get(user_id=self.request.user.id)
 
         try:
-            favourite = Favourite.objects.all().filter(profile=profile)[0]
-            favourite = favourite.property.all()
+            favourite = Favourite.objects.all().filter(profile=profile)
+            if favourite.exists():
+                favourite = favourite[0].property.all()
         except self.model.DoesNotExist:
             favourite = QuerySet(None)
     
         return favourite
 
-class LandlordOfferings(ListView):
+class LandlordOfferings(LandlordOnlyMixin, ListView):
     """
     Landlord's offerings
     """
@@ -210,10 +211,10 @@ class LandlordOfferings(ListView):
         return context
     
 
-EditTenantProfile = create_profile_update_view(Profile, CreateProfileForm) 
-EditLandlordProfile = create_profile_update_view(LandlordProfile, CreateLandlordProfileForm)
-DeleteTenantProfile = create_delete_profile_view(Profile)
-DeleteLandlordProfile = create_delete_profile_view(LandlordProfile)
-LandlordProfileView = create_profile_view(LandlordProfile, 'landlord')
-ProfileView = create_profile_view(Profile, 'profile')
+EditTenantProfile = create_profile_update_view(Profile, CreateProfileForm, TenantOnlyMixin) 
+EditLandlordProfile = create_profile_update_view(LandlordProfile, CreateLandlordProfileForm, LandlordOnlyMixin)
+DeleteTenantProfile = create_delete_profile_view(Profile, TenantOnlyMixin)
+DeleteLandlordProfile = create_delete_profile_view(LandlordProfile, LandlordOnlyMixin)
+LandlordProfileView = create_profile_view(LandlordProfile, 'landlord', LandlordOnlyMixin)
+ProfileView = create_profile_view(Profile, 'profile', TenantOnlyMixin)
 

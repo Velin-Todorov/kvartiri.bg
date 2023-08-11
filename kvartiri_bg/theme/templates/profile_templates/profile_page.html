@@ -78,12 +78,6 @@
             </div>
             
             <div class="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
-              <a href="{% url 'change_password' %}" type="button" class="inline-flex justify-center gap-x-1.5 rounded-md bg-lime-200 px-3 py-2 text-sm font-semibold text-black-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ">
-                Change Email
-              </a>
-            </div>
-
-            <div class="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-x-4 sm:space-y-0">
               {% if user.type == 'TENANT' %}
                 <a href="{% url 'delete_tenant' pk=profile.pk %}" method="POST" type="button" class="inline-flex justify-center gap-x-1.5 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-black-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ">
                   Delete Profile

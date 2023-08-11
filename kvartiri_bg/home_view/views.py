@@ -20,6 +20,7 @@ class IndexView(TemplateView):
             if self.request.user.type == 'LANDLORD':
                 context['landlord'] = LandlordProfile.objects.get(user_id=self.request.user.pk)
             else:
+                print(self.request.user.pk)
                 context['profile'] = Profile.objects.get(user_id=self.request.user.pk)
 
         return context
