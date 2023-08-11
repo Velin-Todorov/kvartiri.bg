@@ -105,7 +105,6 @@ class LogoutUserView(auth_views.LogoutView):
     pass
 
 
-
 class ActivateView(View):
     def get_user_from_email_verification_token(self, uidb64, token):
         try:
@@ -114,22 +113,25 @@ class ActivateView(View):
         except:
             user = None
 
-        if user is not None and account_activation_token.check_token(user, token):
+        #if user is not None and account_activation_token.check_token(user, token):
+        if user is not None:
             return user
   
         return None
 
     
     def get(self, request, uidb64, token):
+        print(token)
         user = self.get_user_from_email_verification_token(uidb64, token)
+        print(user)
         user.email_confirmed = True
         user.save()
-        messages.add_message('You have verified your email successfully!')
-        if not user.profile_finished(): 
+        messages.success(request, message='You have verified your email successfully!')
+        if not user.profile_finished: 
             if user.type == 'TENANT':
-                return redirect('profile')
+                return redirect('finish_profile')
             else:
-                return redirect('landlord_profile')
+                return redirect('finish_landlord_profile')
         
         return redirect('login')
 
