@@ -120,8 +120,11 @@ class PropertyView(DetailView):
                 favourites = Favourite.objects.all()
 
                 if favourites:
-                    favourites = favourites.get(profile=profile)
-                    context['favourites'] = favourites.property.all()
+                    try:
+                        favourites = favourites.get(profile=profile)
+                        context['favourites'] = favourites.property.all()
+                    except:
+                        context['favourites'] = []
 
         landlord = LandlordProfile.objects.get(pk=self.get_object().landlord_id)
         pictures = Picture.objects.filter(property_id=self.get_object().pk)

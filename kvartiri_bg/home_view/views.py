@@ -46,11 +46,11 @@ class DisplayProperties(GetContextBasedOnType, ListView):
         return qs
 
 
-class RentOutPlace(TemplateView):
+class RentOutPlace(GetContextBasedOnType, TemplateView):
     template_name = 'rent_out.html'
 
 
-class AboutPage(TemplateView):
+class AboutPage(GetContextBasedOnType, TemplateView):
     template_name = 'home_templates/about.html'
 
 class HowToUseIt(GetContextBasedOnType, TemplateView):
