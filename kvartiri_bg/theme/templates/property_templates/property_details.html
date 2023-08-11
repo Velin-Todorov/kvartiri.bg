@@ -78,6 +78,8 @@
                 <a href="{% url 'delete_property' pk=property.pk %}" class="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-red-700 px-10 py-3 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full">
                   Delete offering
                 </a>
+              {% else %}
+              <h3> You are a landlord. You cannot add to favourites or react to properties</h3>
               {% endif %}
             {% elif user.type == 'TENANT' and user.is_authenticated %}
               <a href="{% url 'react' pk=property.pk %}" type="submit" class="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full">React to this property</button>
