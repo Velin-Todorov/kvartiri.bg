@@ -31,7 +31,7 @@ def create_delete_profile_view(model_class, custom_mixin):
     class DeleteProfile(custom_mixin, DeleteView):
         model = model_class
         success_url = reverse_lazy('login')
-        template_name = 'profile_templates/confirm_delete.html'
+        template_name = 'confirm_delete.html'
 
 
         def form_valid(self, form):
