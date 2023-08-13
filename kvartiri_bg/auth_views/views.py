@@ -113,7 +113,7 @@ class ActivateView(View):
         except:
             user = None
 
-        #if user is not None and account_activation_token.check_token(user, token):
+        #if user is not None and account_activation_token.check_token(user, token)
         if user is not None:
             return user
   
