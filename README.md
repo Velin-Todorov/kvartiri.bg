@@ -1,5 +1,5 @@
 # kvartiri.bg
-# RoomRental Web Application
+# Kvartiri.bg Application
 
 ## Project Description
 
