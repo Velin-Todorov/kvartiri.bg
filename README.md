@@ -29,11 +29,3 @@ The kvartiri.bg web application is a platform that helps users find rooms for re
 
 - **Profile Management**: Users can update their profiles with personal information, contact details, and preferences.
 
-## Installation
-
-To run this project locally, follow these steps:
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/yourusername/roomrental.git
