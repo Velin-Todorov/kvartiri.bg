@@ -3,7 +3,7 @@
 
 ## Project Description
 
-The RoomRental web application is a platform that helps users find rooms for rent and allows property owners to list their properties for rent. Users can communicate with property owners, update their profiles, and interact seamlessly with the platform.
+The kvartiri.bg web application is a platform that helps users find rooms for rent and allows property owners to list their properties for rent. Users can communicate with property owners, update their profiles, and interact seamlessly with the platform.
 
 ## Technologies Used
 
